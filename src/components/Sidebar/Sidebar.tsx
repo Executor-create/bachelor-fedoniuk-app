@@ -22,6 +22,7 @@ import { logout as apiLogout } from '../../api/auth';
 
 const items = [
   { name: 'Home Feed', href: '/', icon: FiHome },
+  { name: 'Search', href: '/search', icon: FiSearch },
   { name: 'Browse Games', href: '/games', icon: LuGamepad2 },
   { name: 'Recommendations', href: '#', icon: FiStar },
   { name: 'Trending', href: '#', icon: FiTrendingUp },
@@ -29,7 +30,6 @@ const items = [
   { name: 'Friends', href: '#', icon: FiUser },
   { name: 'Messages', href: '#', icon: FiMessageSquare },
   { name: 'Collections', href: '/collections', icon: FiFolder },
-  { name: 'Search', href: '/search', icon: FiSearch },
   { name: 'Leaderboards', href: '#', icon: FiAward },
 ];
 
