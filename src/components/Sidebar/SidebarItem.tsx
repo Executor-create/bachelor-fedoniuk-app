@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const SidebarItem = ({
   name,
   href,
@@ -13,28 +15,53 @@ const SidebarItem = ({
 }) => {
   return (
     <li className="relative mb-1 group">
-      <a
-        href={href}
-        className={`
-          font-google text-sm font-bold
-          hover:text-white hover:bg-(--primary-color) hover:rounded-md
-          flex items-center gap-2 transition-all duration-200 cursor-pointer
-          ${collapsed ? 'justify-center p-3' : 'p-2'}
-        `}
-      >
-        <Icon size={20} />
+      {href && href.startsWith('/') ? (
+        <Link
+          to={href}
+          className={`
+            font-google text-sm font-bold
+            hover:text-white hover:bg-(--primary-color) hover:rounded-md
+            flex items-center gap-2 transition-all duration-200 cursor-pointer
+            ${collapsed ? 'justify-center p-3' : 'p-2'}
+          `}
+        >
+          <Icon size={20} />
 
-        {labelsVisible && (
-          <span
-            className={`
-              whitespace-nowrap overflow-hidden transition-opacity duration-200
-              ${collapsed ? 'opacity-0 w-0' : 'opacity-100'}
-            `}
-          >
-            {name}
-          </span>
-        )}
-      </a>
+          {labelsVisible && (
+            <span
+              className={`
+                whitespace-nowrap overflow-hidden transition-opacity duration-200
+                ${collapsed ? 'opacity-0 w-0' : 'opacity-100'}
+              `}
+            >
+              {name}
+            </span>
+          )}
+        </Link>
+      ) : (
+        <a
+          href={href}
+          className={`
+            font-google text-sm font-bold
+            hover:text-white hover:bg-(--primary-color) hover:rounded-md
+            flex items-center gap-2 transition-all duration-200 cursor-pointer
+            ${collapsed ? 'justify-center p-3' : 'p-2'}
+          `}
+        >
+          <Icon size={20} />
+
+          {labelsVisible && (
+            <span
+              className={`
+                whitespace-nowrap overflow-hidden transition-opacity duration-200
+                ${collapsed ? 'opacity-0 w-0' : 'opacity-100'}
+              `}
+            >
+              {name}
+            </span>
+          )}
+        </a>
+      )}
 
       {/* tooltip on hover when collapsed */}
       {collapsed && (

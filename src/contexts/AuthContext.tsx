@@ -26,23 +26,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (token) {
-          const response = await api.get('/auth/me', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUser(response.data);
-        } else {
+        if (!token) {
           setUser(null);
+          return;
         }
-      } catch (error) {
+
+        const response = await api.get('/auth/me');
+        setUser(response.data);
+      } catch (error: any) {
         console.error('Error loading user profile:', error);
+
+        if (error?.response?.status === 401) {
+          // token refresh flow in api interceptor may already have run.
+          // if it still fails, clear auth state.
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+        }
+
         setUser(null);
       } finally {
         setIsLoading(false);
       }
     };
+
     fetchUser();
   }, []);
 

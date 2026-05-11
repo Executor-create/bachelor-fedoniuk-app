@@ -6,7 +6,7 @@ import {
   FiUser,
   FiMessageSquare,
   FiFolder,
-  FiCalendar,
+  FiSearch,
   FiAward,
   FiSettings,
   FiLogOut,
@@ -18,6 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 import SidebarItem from './SidebarItem';
 import { removeItemFromLocalStorage } from '../../utils/localStorage';
 import { useNavigate } from 'react-router-dom';
+import { logout as apiLogout } from '../../api/auth';
 
 const items = [
   { name: 'Home Feed', href: '/', icon: FiHome },
@@ -27,8 +28,8 @@ const items = [
   { name: 'Community', href: '#', icon: FiUsers },
   { name: 'Friends', href: '#', icon: FiUser },
   { name: 'Messages', href: '#', icon: FiMessageSquare },
-  { name: 'Collections', href: '#', icon: FiFolder },
-  { name: 'Events', href: '#', icon: FiCalendar },
+  { name: 'Collections', href: '/collections', icon: FiFolder },
+  { name: 'Search', href: '/search', icon: FiSearch },
   { name: 'Leaderboards', href: '#', icon: FiAward },
 ];
 
@@ -91,10 +92,16 @@ const Sidebar = () => {
             />
             <button
               className="w-full"
-              onClick={() => {
-                removeItemFromLocalStorage('accessToken');
-                removeItemFromLocalStorage('refreshToken');
-                navigate('/login');
+              onClick={async () => {
+                try {
+                  await apiLogout();
+                } catch (err) {
+                  // ignore API errors
+                } finally {
+                  removeItemFromLocalStorage('token');
+                  removeItemFromLocalStorage('refreshToken');
+                  navigate('/login');
+                }
               }}
             >
               <SidebarItem

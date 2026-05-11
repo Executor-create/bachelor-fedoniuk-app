@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/",
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -33,7 +35,7 @@ const refreshTokens = async () => {
   }
 
   const response = await axios.post(
-    `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/auth/refresh`,
+    `${BASE_URL}/auth/refresh`,
     { refreshToken },
     { headers: { "Content-Type": "application/json" } },
   );

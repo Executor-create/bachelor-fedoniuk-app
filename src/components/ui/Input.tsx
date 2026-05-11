@@ -7,8 +7,8 @@ type InputProps = {
   label?: string;
   placeholder?: string;
   name: string;
-  register: UseFormRegister<Record<string, unknown>>;
-  errors: FieldErrors<Record<string, unknown>>;
+  register: UseFormRegister<any>;
+  errors: FieldErrors<any>;
   options?: Record<string, unknown>;
 };
 

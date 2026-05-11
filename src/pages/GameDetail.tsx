@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
-import { IoClose, IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import {
+  IoClose,
+  IoChevronBack,
+  IoChevronForward,
+  IoAdd,
+  IoHeartOutline,
+  IoShareSocialOutline,
+} from 'react-icons/io5';
 import { MdZoomIn } from 'react-icons/md';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
+import ReviewsSection from '../components/Game/ReviewsSection';
 import { fetchGameById } from '../api/games';
 import type { Game } from '../api/games';
 
@@ -109,7 +117,7 @@ const GameDetail = () => {
             <article className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-violet-950/50">
               {/* Hero Section - Image and Title */}
               <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] mb-6">
-                <div className="relative overflow-hidden rounded-xl h-[370px]">
+                <div className="relative overflow-hidden rounded-xl h-92.5">
                   <img
                     src={game.background_image}
                     alt={game.name}
@@ -200,6 +208,19 @@ const GameDetail = () => {
                       )}
                     </div>
                   </div>
+
+                  <div className="pt-4 flex items-center gap-3">
+                    <button className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-500">
+                      <IoAdd size={20} />
+                      <span>Add to Collection</span>
+                    </button>
+                    <button className="flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-zinc-200 transition hover:border-zinc-600 hover:text-white">
+                      <IoHeartOutline size={20} />
+                    </button>
+                    <button className="flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-zinc-200 transition hover:border-zinc-600 hover:text-white">
+                      <IoShareSocialOutline size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -244,6 +265,15 @@ const GameDetail = () => {
                   </p>
                 )}
               </div>
+              {/* Reviews */}
+              <ReviewsSection
+                gameId={game.id}
+                game={{
+                  name: game.name,
+                  genres: game.genres,
+                  background_image: game.background_image,
+                }}
+              />
             </article>
           )}
         </main>
@@ -319,7 +349,7 @@ const GameDetail = () => {
                     e.stopPropagation();
                     setSelectedImageIndex(index);
                   }}
-                  className={`flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-all ${
+                  className={`shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-all ${
                     index === selectedImageIndex
                       ? 'border-violet-500 scale-110'
                       : 'border-transparent hover:border-zinc-600'

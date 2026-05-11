@@ -21,7 +21,7 @@ import {
   type SignUpResponse,
 } from '../api/auth';
 import { setItemToLocalStorage } from '../utils/localStorage';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const {
@@ -48,8 +48,9 @@ const Login = () => {
       const response = await signUp(data);
 
       if (response && response.userId) {
+        setItemToLocalStorage('userId', response.userId);
         reset();
-        navigate('/otp');
+        navigate('/otp', { state: { userId: response.userId } });
       }
       return response;
     } catch (error: any) {
@@ -94,6 +95,9 @@ const Login = () => {
       const response = await login(data);
 
       setItemToLocalStorage('token', response?.accessToken || '');
+      if (response?.refreshToken) {
+        setItemToLocalStorage('refreshToken', response.refreshToken);
+      }
 
       setSuccessMessage('Login successful! Redirecting to home...');
       setTimeout(() => {
@@ -300,12 +304,12 @@ const Login = () => {
 
             {isLogin && (
               <div className="flex justify-end">
-                <a
-                  href="#"
+                <Link
+                  to="/forgot-password"
                   className="text-sm text-primary font-semibold hover:underline font-google"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
             )}
 

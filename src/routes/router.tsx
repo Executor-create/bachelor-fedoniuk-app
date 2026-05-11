@@ -8,7 +8,10 @@ import OTP from '../pages/OTP';
 import ForgotPasswordPage from '../pages/ForgotPassword';
 import ResetPasswordPage from '../pages/ResetPassword';
 import { GamesPage } from '../pages/Games';
+import Collections from '../pages/Collections';
+import CollectionDetail from '../pages/CollectionDetail';
 import GameDetail from '../pages/GameDetail';
+import Search from '../pages/Search';
 
 const router = createBrowserRouter([
   {
@@ -47,7 +50,23 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: 'collections',
+        element: <Collections />,
+      },
+      {
+        path: 'collections/:id',
+        element: <CollectionDetail />,
+      },
+      {
+        path: 'search',
+        element: <Search />,
+      },
+      {
         path: 'profile',
+        element: <Profile />,
+      },
+      {
+        path: 'profile/:id',
         element: <Profile />,
       },
     ],

@@ -35,32 +35,34 @@ const Feed = () => {
   ];
 
   return (
-    <div className="p-6">
-      <h2
-        className="text-3xl font-bold text-white mb-6 font-google"
-        style={{
-          background:
-            'linear-gradient(to bottom right, var(--primary-color), var(--secondary-color))',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          color: 'transparent',
-        }}
-      >
-        Your Feed
-      </h2>
-      <div className="space-y-4">
-        {feedItems.map((item) => (
-          <FeedItem
-            key={item.id}
-            user={item.user}
-            avatar={item.avatar}
-            content={item.content}
-            timestamp={item.timestamp}
-            likes={item.likes}
-            comments={item.comments}
-          />
-        ))}
+    <div className="p-6 flex justify-center">
+      <div className="w-full max-w-4xl">
+        <h2
+          className="text-3xl font-bold text-white mb-6 font-google"
+          style={{
+            background:
+              'linear-gradient(to bottom right, var(--primary-color), var(--secondary-color))',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            color: 'transparent',
+          }}
+        >
+          Your Feed
+        </h2>
+        <div className="space-y-4">
+          {feedItems.map((item) => (
+            <FeedItem
+              key={item.id}
+              user={item.user}
+              avatar={item.avatar}
+              content={item.content}
+              timestamp={item.timestamp}
+              likes={item.likes}
+              comments={item.comments}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

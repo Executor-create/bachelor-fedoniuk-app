@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import { FiBox } from 'react-icons/fi';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
 import { fetchGames } from '../api/games';
@@ -147,7 +148,6 @@ export const GamesPage = () => {
     setPrevCursors([]);
   };
 
-  const page = prevCursors.length + 1;
   const isSearching = !!searchText;
 
   const visibleGames = useMemo(() => {
@@ -176,24 +176,19 @@ export const GamesPage = () => {
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
 
-        <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-6 gap-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           {/* heading */}
-          <div>
-            <h1
-              style={{
-                background:
-                  'linear-gradient(to bottom right, var(--primary-color), var(--secondary-color))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
-              className="text-4xl"
-            >
-              Browse Games
+          <div className="max-w-2xl">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-zinc-300">
+              <FiBox className="text-violet-300" size={14} />
+              <span>Browse Games</span>
+            </div>
+            <h1 className="font-google text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              Discover your next favorite game
             </h1>
-            <p className="text-sm text-zinc-400 font-light">
-              Discover your next favorite game from our collection
+            <p className="mt-4 max-w-xl text-base leading-7 text-zinc-400">
+              Explore our collection of games across different genres and
+              platforms with detailed reviews and ratings.
             </p>
           </div>
 
