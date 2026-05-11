@@ -74,8 +74,14 @@ const Feed = () => {
           ) : (
             posts.map((post) => {
               const userName =
-                post.user?.username ?? post.author?.username ?? 'Gamer';
-              const avatar = post.user?.avatar ?? post.author?.avatar;
+                post.user?.profile?.display_name ??
+                post.user?.username ??
+                post.author?.username ??
+                'Gamer';
+              const avatar =
+                post.user?.profile?.avatar_url ??
+                post.user?.avatar ??
+                post.author?.avatar;
               const timestamp = formatRelativeTime(
                 post.created_at ??
                   post.createdAt ??

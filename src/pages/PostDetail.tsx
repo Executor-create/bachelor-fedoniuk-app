@@ -55,8 +55,15 @@ const PostDetail = () => {
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  const userName = post?.user?.username ?? post?.author?.username ?? 'Gamer';
-  const avatar = post?.user?.avatar ?? post?.author?.avatar;
+  const userName =
+    post?.user?.profile?.display_name ??
+    post?.user?.username ??
+    post?.author?.username ??
+    'Gamer';
+  const avatar =
+    post?.user?.profile?.avatar_url ??
+    post?.user?.avatar ??
+    post?.author?.avatar;
   const timestamp = formatRelativeTime(
     post?.created_at ?? post?.createdAt ?? post?.updated_at ?? post?.updatedAt,
   );
@@ -145,11 +152,14 @@ const PostDetail = () => {
                     ) : (
                       comments.map((comment) => {
                         const commentUser =
+                          comment.user?.profile?.display_name ??
                           comment.user?.username ??
                           comment.author?.username ??
                           'User';
                         const commentAvatar =
-                          comment.user?.avatar ?? comment.author?.avatar;
+                          comment.user?.profile?.avatar_url ??
+                          comment.user?.avatar ??
+                          comment.author?.avatar;
                         const commentTimestamp = formatRelativeTime(
                           comment.created_at ?? comment.createdAt,
                         );

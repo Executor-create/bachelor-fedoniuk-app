@@ -19,8 +19,13 @@ export type Post = {
     };
   }>;
   user?: {
+    id?: string;
     username?: string;
     avatar?: string;
+    profile?: {
+      display_name?: string;
+      avatar_url?: string | null;
+    };
   };
   author?: {
     username?: string;
@@ -34,8 +39,13 @@ export type Post = {
     created_at?: string;
     createdAt?: string;
     user?: {
+      id?: string;
       username?: string;
       avatar?: string;
+      profile?: {
+        display_name?: string;
+        avatar_url?: string | null;
+      };
     };
     author?: {
       username?: string;
