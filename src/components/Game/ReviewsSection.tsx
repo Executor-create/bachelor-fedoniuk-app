@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getRelatedGames, type Game as RelatedGame } from '../../api/games';
 import ReviewCard from './ReviewCard';
 import ReviewForm from './ReviewForm';
 import { getReviewsByGame, createReview } from '../../api/reviews';
@@ -13,6 +15,11 @@ const ReviewsSection: React.FC<{
   game?: { name: string; genres: string[]; background_image?: string };
 }> = ({ gameId, game }) => {
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [relatedGames, setRelatedGames] = useState<RelatedGame[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
+  const [relatedError, setRelatedError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<
     (ApiReview & { date?: string; text?: string })[]
   >([]);
@@ -55,6 +62,32 @@ const ReviewsSection: React.FC<{
     };
   }, [gameId]);
 
+  useEffect(() => {
+    if (activeTab !== 2) return;
+    let mounted = true;
+    const fetchRelated = async () => {
+      setRelatedLoading(true);
+      setRelatedError(null);
+      try {
+        const data = await getRelatedGames(gameId, 12);
+        if (!mounted) return;
+        setRelatedGames(data || []);
+      } catch (err) {
+        console.error(err);
+        if (!mounted) return;
+        setRelatedError('Unable to load related games.');
+        setRelatedGames([]);
+      } finally {
+        if (mounted) setRelatedLoading(false);
+      }
+    };
+
+    fetchRelated();
+    return () => {
+      mounted = false;
+    };
+  }, [activeTab, gameId]);
+
   const handleSubmit = async (payload: { rating: number; text: string }) => {
     await createReview(gameId, {
       rating: payload.rating,
@@ -84,8 +117,9 @@ const ReviewsSection: React.FC<{
           {tabs.map((tab, i) => (
             <button
               key={tab}
+              onClick={() => setActiveTab(i)}
               className={`px-3 py-1 rounded-full text-sm font-medium ${
-                i === 0
+                i === activeTab
                   ? 'bg-zinc-800 text-white border border-zinc-700'
                   : 'text-zinc-400'
               }`}
@@ -104,22 +138,76 @@ const ReviewsSection: React.FC<{
       </div>
 
       <div className="space-y-4">
-        {loading && <p className="text-sm text-zinc-400">Loading reviews…</p>}
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        {reviews.map((r) => (
-          <ReviewCard
-            key={r.id}
-            review={{
-              id: r.id,
-              authorName: r.authorName || 'Anonymous',
-              authorAvatar: r.authorAvatar,
-              date: r.date || '',
-              rating: r.rating,
-              text: r.text || '',
-              likes: r.likes,
-            }}
-          />
-        ))}
+        {activeTab === 0 && (
+          <>
+            {loading && (
+              <p className="text-sm text-zinc-400">Loading reviews…</p>
+            )}
+            {error && <p className="text-sm text-red-400">{error}</p>}
+            {reviews.map((r) => (
+              <ReviewCard
+                key={r.id}
+                review={{
+                  id: r.id,
+                  authorName: r.authorName || 'Anonymous',
+                  authorAvatar: r.authorAvatar,
+                  date: r.date || '',
+                  rating: r.rating,
+                  text: r.text || '',
+                  likes: r.likes,
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {activeTab === 1 && (
+          <div className="text-sm text-zinc-500">
+            Community content coming soon.
+          </div>
+        )}
+
+        {activeTab === 2 && (
+          <div>
+            {relatedLoading && (
+              <p className="text-sm text-zinc-400">Loading related games…</p>
+            )}
+            {relatedError && (
+              <p className="text-sm text-red-400">{relatedError}</p>
+            )}
+            {!relatedLoading && relatedGames.length === 0 && !relatedError && (
+              <p className="text-sm text-zinc-500">No related games found.</p>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+              {relatedGames.map((g) => (
+                <button
+                  key={g.id}
+                  onClick={() => navigate(`/games/${g.id}`)}
+                  className="group text-left transition-all duration-200 hover:-translate-y-1 hover:scale-[1.01]"
+                >
+                  <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/5 shadow-lg shadow-black/20 transition-all duration-200 group-hover:border-white/12">
+                    <div className="relative aspect-16/9 overflow-hidden">
+                      <img
+                        src={g.background_image}
+                        alt={g.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="space-y-1 px-3 py-3">
+                      <h3 className="truncate text-sm font-semibold text-white">
+                        {g.name}
+                      </h3>
+                      <p className="text-xs text-zinc-400">
+                        {g.genres?.[0] ?? 'Game'}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {open && (

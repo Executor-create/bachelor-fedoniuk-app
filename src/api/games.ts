@@ -73,3 +73,13 @@ export const fetchPopularGames = async (
   });
   return response.data;
 };
+
+export const getRelatedGames = async (
+  id: string,
+  limit = 12,
+): Promise<Game[]> => {
+  const response = await api.get<Game[]>(`/games/${id}/related`, {
+    params: { limit },
+  });
+  return response.data;
+};
