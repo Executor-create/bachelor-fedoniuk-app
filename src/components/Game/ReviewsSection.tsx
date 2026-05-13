@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRelatedGames, type Game as RelatedGame } from '../../api/games';
+import FeedItem from '../Feed/FeedItem';
 import ReviewCard from './ReviewCard';
 import ReviewForm from './ReviewForm';
 import { getReviewsByGame, createReview } from '../../api/reviews';
 import type { Review as ApiReview } from '../../api/reviews';
+import { getPostsByGame, type Post } from '../../api/posts';
+import { useAuth } from '../../contexts/AuthContext';
 
 const tabs = ['Reviews', 'Community', 'Related Games'];
 
@@ -20,11 +23,36 @@ const ReviewsSection: React.FC<{
   const [relatedLoading, setRelatedLoading] = useState(false);
   const [relatedError, setRelatedError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [reviews, setReviews] = useState<
     (ApiReview & { date?: string; text?: string })[]
   >([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [communityPosts, setCommunityPosts] = useState<Post[]>([]);
+  const [communityLoading, setCommunityLoading] = useState(false);
+  const [communityError, setCommunityError] = useState<string | null>(null);
+
+  const formatRelativeTime = (value?: string) => {
+    if (!value) return 'Just now';
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return 'Just now';
+
+    const diffMs = Date.now() - date.getTime();
+    const minutes = Math.floor(diffMs / 60000);
+
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+
+    return date.toLocaleDateString();
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -83,6 +111,42 @@ const ReviewsSection: React.FC<{
     };
 
     fetchRelated();
+    return () => {
+      mounted = false;
+    };
+  }, [activeTab, gameId]);
+
+  useEffect(() => {
+    if (activeTab !== 1) return;
+
+    let mounted = true;
+
+    const fetchCommunityPosts = async () => {
+      setCommunityLoading(true);
+      setCommunityError(null);
+
+      try {
+        const data = await getPostsByGame(gameId);
+        if (!mounted) return;
+
+        setCommunityPosts(
+          data.filter(
+            (post) =>
+              post.taggedGames?.some(({ game }) => game.id === gameId) ||
+              post.taggedGameIds?.includes(gameId),
+          ),
+        );
+      } catch (err) {
+        console.error(err);
+        if (!mounted) return;
+        setCommunityError('Unable to load community posts.');
+        setCommunityPosts([]);
+      } finally {
+        if (mounted) setCommunityLoading(false);
+      }
+    };
+
+    fetchCommunityPosts();
     return () => {
       mounted = false;
     };
@@ -162,8 +226,56 @@ const ReviewsSection: React.FC<{
         )}
 
         {activeTab === 1 && (
-          <div className="text-sm text-zinc-500">
-            Community content coming soon.
+          <div>
+            {communityLoading && (
+              <p className="text-sm text-zinc-400">Loading community posts…</p>
+            )}
+            {communityError && (
+              <p className="text-sm text-red-400">{communityError}</p>
+            )}
+            {!communityLoading &&
+              communityPosts.length === 0 &&
+              !communityError && (
+                <p className="text-sm text-zinc-500">
+                  No community posts tagged with this game yet.
+                </p>
+              )}
+
+            <div className="mt-3 space-y-4">
+              {communityPosts.map((post) => {
+                const userName =
+                  post.user?.profile?.display_name ??
+                  post.user?.username ??
+                  post.author?.username ??
+                  'Gamer';
+                const avatar =
+                  post.user?.profile?.avatar_url ??
+                  post.user?.avatar ??
+                  post.author?.avatar;
+                const timestamp = formatRelativeTime(
+                  post.created_at ??
+                    post.createdAt ??
+                    post.updated_at ??
+                    post.updatedAt,
+                );
+
+                return (
+                  <FeedItem
+                    key={post.id}
+                    postId={post.id}
+                    userId={user?.id}
+                    user={userName}
+                    avatar={avatar}
+                    content={post.content}
+                    timestamp={timestamp}
+                    likes={post.likes ?? 0}
+                    isLiked={post.isLiked ?? false}
+                    comments={post.comments ?? 0}
+                    taggedGames={post.taggedGames}
+                  />
+                );
+              })}
+            </div>
           </div>
         )}
 
@@ -187,7 +299,7 @@ const ReviewsSection: React.FC<{
                   className="group text-left transition-all duration-200 hover:-translate-y-1 hover:scale-[1.01]"
                 >
                   <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/5 shadow-lg shadow-black/20 transition-all duration-200 group-hover:border-white/12">
-                    <div className="relative aspect-16/9 overflow-hidden">
+                    <div className="relative aspect-video overflow-hidden">
                       <img
                         src={g.background_image}
                         alt={g.name}

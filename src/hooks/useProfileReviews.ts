@@ -14,7 +14,7 @@ export type UseProfileReviewsReturn = {
 };
 
 /**
- * Fetches the current user's reviews when the "Reviews" tab is active.
+ * Fetches the current user's reviews for the profile page.
  * Only fires for the own-profile view (not external profiles).
  */
 export function useProfileReviews(
@@ -26,7 +26,7 @@ export function useProfileReviews(
   const [reviewsError, setReviewsError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (selectedTab !== 'Reviews' || isExternalProfile) return;
+    if (isExternalProfile) return;
 
     let active = true;
 
@@ -68,7 +68,7 @@ export function useProfileReviews(
     return () => {
       active = false;
     };
-  }, [selectedTab, isExternalProfile]);
+  }, [isExternalProfile]);
 
   return { userReviews, reviewsLoading, reviewsError };
 }

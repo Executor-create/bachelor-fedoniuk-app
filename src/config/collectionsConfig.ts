@@ -1,7 +1,6 @@
 import type { ComponentType } from 'react';
 import {
   FiAward,
-  FiBookmark,
   FiClock,
   FiGrid,
   FiHeart,

@@ -66,7 +66,7 @@ const Sidebar = () => {
       style={{ width: collapsed ? '4.5rem' : '17rem' }}
     >
       {/* Inner: the actual scrollable sidebar — overflow lives here */}
-      <div className="h-full w-full bg-(--third-color) text-white flex flex-col border-r border-gray-700 overflow-y-auto scrollbar-hide p-3">
+      <div className="h-full w-full bg-zinc-950 text-white flex flex-col border-r border-zinc-800 overflow-y-auto scrollbar-hide p-3">
         <ul>
           {items.map((item) => (
             <SidebarItem
@@ -80,8 +80,15 @@ const Sidebar = () => {
           ))}
         </ul>
 
-        <div className="mt-auto border-t border-gray-600 pt-3">
+        <div className="mt-auto border-t border-zinc-800 pt-3">
           <ul>
+            <SidebarItem
+              name="Profile"
+              href="/profile"
+              icon={FiUser}
+              collapsed={collapsed}
+              labelsVisible={labelsVisible}
+            />
             <SidebarItem
               name="Settings"
               href="#"
@@ -113,6 +120,8 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
+
+      {/* Toggle button */}
       <button
         onClick={toggle}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -120,9 +129,9 @@ const Sidebar = () => {
           absolute bottom-33 right-0 translate-x-1/2 z-20
           flex items-center justify-center
           w-5 h-9 rounded-full
-          bg-(--third-color) border border-gray-700
-          text-gray-300 shadow-md
-          hover:bg-gray-600 hover:text-white hover:scale-110
+          bg-zinc-900 border border-zinc-800
+          text-zinc-400 shadow-md
+          hover:bg-zinc-800 hover:border-zinc-700 hover:text-white hover:scale-110
           transition-all duration-150
         "
       >

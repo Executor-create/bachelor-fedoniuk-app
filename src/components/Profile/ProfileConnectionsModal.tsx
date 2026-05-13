@@ -1,4 +1,4 @@
-import { FiUserPlus, FiX } from 'react-icons/fi';
+import { FiUserCheck, FiUserPlus, FiX } from 'react-icons/fi';
 import type { NormalizedUser } from '../../api/users';
 
 type ProfileConnectionsModalProps = {
@@ -30,35 +30,51 @@ const ProfileConnectionsModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      {/* Backdrop */}
       <button
         type="button"
         aria-label="Close connections dialog"
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative z-10 w-full max-w-xl rounded-2xl bg-white p-6 text-zinc-900 shadow-2xl">
-        <div className="flex items-start justify-between">
+
+      {/* Modal */}
+      <div className="relative z-10 w-full max-w-lg rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl shadow-black/60">
+        {/* Header */}
+        <div className="flex items-start justify-between p-5 border-b border-zinc-800">
           <div>
-            <h2 className="text-xl font-semibold">{title}</h2>
-            {subtitle && <p className="text-sm text-zinc-500">{subtitle}</p>}
+            <h2 className="text-base font-semibold text-white">{title}</h2>
+            {subtitle && (
+              <p className="text-xs text-zinc-500 mt-0.5">{subtitle}</p>
+            )}
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-1 text-zinc-500 transition hover:bg-zinc-100"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-white transition"
             aria-label="Close"
           >
-            <FiX size={18} />
+            <FiX size={17} />
           </button>
         </div>
 
-        <div className="mt-5 space-y-3 max-h-[60vh] overflow-y-auto">
+        {/* Body */}
+        <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-700">
           {isLoading ? (
-            <p className="text-sm text-zinc-500">Loading...</p>
+            <div className="space-y-2 py-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-16 bg-zinc-800/60 rounded-xl animate-pulse"
+                />
+              ))}
+            </div>
           ) : error ? (
-            <p className="text-sm text-red-500">{error}</p>
+            <p className="text-sm text-red-400 py-4 text-center">{error}</p>
           ) : users.length === 0 ? (
-            <p className="text-sm text-zinc-500">No users found.</p>
+            <p className="text-sm text-zinc-500 py-8 text-center">
+              No users found.
+            </p>
           ) : (
             users.map((user) => {
               const handle = user.tag || '';
@@ -70,10 +86,10 @@ const ProfileConnectionsModal = ({
               return (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm"
+                  className="flex items-center justify-between gap-4 rounded-xl bg-zinc-800/40 border border-zinc-800 hover:border-zinc-700 p-3 transition"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-full overflow-hidden bg-zinc-200 text-zinc-700 flex items-center justify-center font-semibold">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full overflow-hidden bg-zinc-700 text-zinc-300 flex items-center justify-center font-semibold text-sm shrink-0">
                       {user.avatar ? (
                         <img
                           src={user.avatar}
@@ -85,13 +101,13 @@ const ProfileConnectionsModal = ({
                       )}
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-zinc-900">
+                      <div className="text-sm font-semibold text-white leading-tight">
                         {user.username}
                       </div>
                       {handle && (
-                        <div className="text-sm text-zinc-500">{handle}</div>
+                        <div className="text-xs text-zinc-500">{handle}</div>
                       )}
-                      <div className="text-xs text-zinc-500 mt-1">
+                      <div className="text-xs text-zinc-600 mt-0.5">
                         {followers.toLocaleString()} followers
                       </div>
                     </div>
@@ -102,17 +118,21 @@ const ProfileConnectionsModal = ({
                       type="button"
                       onClick={() => onToggleFollow(user)}
                       disabled={isPending}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                         isFollowing
-                          ? 'bg-zinc-100 text-zinc-800 border border-zinc-200'
-                          : 'bg-linear-to-r from-violet-500 to-pink-500 text-white'
-                      } ${isPending ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+                          ? 'bg-zinc-700 text-white border border-zinc-600 hover:bg-zinc-600'
+                          : 'bg-violet-600 text-white hover:bg-violet-500'
+                      } ${isPending ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
-                      <FiUserPlus />
+                      {isFollowing ? (
+                        <FiUserCheck size={13} />
+                      ) : (
+                        <FiUserPlus size={13} />
+                      )}
                       {isPending
-                        ? 'Updating...'
+                        ? 'Updating…'
                         : isFollowing
-                          ? 'Unfollow'
+                          ? 'Following'
                           : 'Follow'}
                     </button>
                   )}

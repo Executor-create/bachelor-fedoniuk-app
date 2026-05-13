@@ -134,6 +134,26 @@ export const getAllPosts = async (): Promise<Post[]> => {
   return unwrapPosts(response.data);
 };
 
+export const getPostsByGame = async (gameId: string): Promise<Post[]> => {
+  const response = await api.get<PostsResponse>(`/games/${gameId}/posts`);
+
+  if (response.status !== 200) {
+    throw new Error('Failed to load game posts');
+  }
+
+  return unwrapPosts(response.data);
+};
+
+export const getPostsByUser = async (userId: string): Promise<Post[]> => {
+  const response = await api.get<PostsResponse>(`/posts/user/${userId}`);
+
+  if (response.status !== 200) {
+    throw new Error('Failed to load user posts');
+  }
+
+  return unwrapPosts(response.data);
+};
+
 export const getPostById = async (id: string): Promise<Post> => {
   const response = await api.get<PostResponse>(`/posts/${id}`);
 

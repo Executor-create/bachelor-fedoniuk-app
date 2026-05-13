@@ -29,7 +29,6 @@ const FeedItem = ({
   postId,
   userId,
   linkToPost = true,
-  className,
   user,
   avatar,
   content,
