@@ -22,6 +22,7 @@ import {
 } from '../api/auth';
 import { setItemToLocalStorage } from '../utils/localStorage';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const {
@@ -32,6 +33,7 @@ const Login = () => {
     setError,
     formState: { errors },
   } = useForm<any>();
+  const { refreshUser } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [successMessage, setSuccessMessage] = useState<string>('');
@@ -98,6 +100,8 @@ const Login = () => {
       if (response?.refreshToken) {
         setItemToLocalStorage('refreshToken', response.refreshToken);
       }
+
+      await refreshUser();
 
       setSuccessMessage('Login successful! Redirecting to home...');
       setTimeout(() => {
