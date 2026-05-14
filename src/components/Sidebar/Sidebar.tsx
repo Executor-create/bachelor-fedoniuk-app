@@ -7,7 +7,6 @@ import {
   FiMessageSquare,
   FiFolder,
   FiSearch,
-  FiAward,
   FiSettings,
   FiLogOut,
   FiChevronLeft,
@@ -27,9 +26,8 @@ const items = [
   { name: 'Recommendations', href: '/recommendations', icon: FiStar },
   { name: 'Trending', href: '/trending', icon: FiTrendingUp },
   { name: 'Community', href: '#', icon: FiUsers },
-  { name: 'Messages', href: '#', icon: FiMessageSquare },
+  { name: 'Messages', href: '/chat', icon: FiMessageSquare },
   { name: 'Collections', href: '/collections', icon: FiFolder },
-  { name: 'Leaderboards', href: '#', icon: FiAward },
 ];
 
 const Sidebar = () => {

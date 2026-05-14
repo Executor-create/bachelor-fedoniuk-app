@@ -14,6 +14,7 @@ import PostDetail from '../pages/PostDetail';
 import Search from '../pages/Search';
 import TrendingPage from '../pages/Trending';
 import Recommendations from '../pages/Recommendations';
+import Chat from '../pages/Chat';
 
 const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: 'profile/:id',
         element: <Profile />,
+      },
+      {
+        path: 'chat',
+        element: <Chat />,
       },
     ],
   },

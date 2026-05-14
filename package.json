@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.13.5",
+    "socket.io-client": "^4.7.2",
     "clsx": "^2.1.1",
     "localforage": "^1.10.0",
     "match-sorter": "^8.2.0",
