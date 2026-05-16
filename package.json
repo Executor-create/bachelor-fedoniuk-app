@@ -12,8 +12,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.13.5",
-    "socket.io-client": "^4.7.2",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
     "localforage": "^1.10.0",
     "match-sorter": "^8.2.0",
     "react": "^19.2.0",
@@ -21,6 +21,7 @@
     "react-hook-form": "^7.71.1",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.13.0",
+    "socket.io-client": "^4.7.2",
     "sort-by": "^1.2.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"
