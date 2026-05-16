@@ -22,76 +22,81 @@ const TrendingPage = lazy(() => import('../pages/Trending'));
 const Recommendations = lazy(() => import('../pages/Recommendations'));
 const Chat = lazy(() => import('../pages/Chat'));
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/login',
+      element: <Login />,
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPasswordPage />,
+    },
+    {
+      path: '/otp',
+      element: <OTP />,
+    },
+    {
+      path: '/reset-password',
+      element: <ResetPasswordPage />,
+    },
+    {
+      path: '/games',
+      element: <GamesPage />,
+    },
+    {
+      path: '/games/:id',
+      element: <GameDetail />,
+    },
+    {
+      element: <RequireAuth />,
+      children: [
+        {
+          path: '/',
+          element: <Home />,
+        },
+        {
+          path: 'collections',
+          element: <Collections />,
+        },
+        {
+          path: 'collections/:id',
+          element: <CollectionDetail />,
+        },
+        {
+          path: 'posts/:id',
+          element: <PostDetail />,
+        },
+        {
+          path: 'search',
+          element: <Search />,
+        },
+        {
+          path: 'trending',
+          element: <TrendingPage />,
+        },
+        {
+          path: 'recommendations',
+          element: <Recommendations />,
+        },
+        {
+          path: 'profile',
+          element: <Profile />,
+        },
+        {
+          path: 'profile/:id',
+          element: <Profile />,
+        },
+        {
+          path: 'chat',
+          element: <Chat />,
+        },
+      ],
+    },
+  ],
   {
-    path: '/login',
-    element: <Login />,
+    basename: import.meta.env.PROD ? '/klyro-app' : '/',
   },
-  {
-    path: '/forgot-password',
-    element: <ForgotPasswordPage />,
-  },
-  {
-    path: '/otp',
-    element: <OTP />,
-  },
-  {
-    path: '/reset-password',
-    element: <ResetPasswordPage />,
-  },
-  {
-    path: '/games',
-    element: <GamesPage />,
-  },
-  {
-    path: '/games/:id',
-    element: <GameDetail />,
-  },
-  {
-    element: <RequireAuth />,
-    children: [
-      {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: 'collections',
-        element: <Collections />,
-      },
-      {
-        path: 'collections/:id',
-        element: <CollectionDetail />,
-      },
-      {
-        path: 'posts/:id',
-        element: <PostDetail />,
-      },
-      {
-        path: 'search',
-        element: <Search />,
-      },
-      {
-        path: 'trending',
-        element: <TrendingPage />,
-      },
-      {
-        path: 'recommendations',
-        element: <Recommendations />,
-      },
-      {
-        path: 'profile',
-        element: <Profile />,
-      },
-      {
-        path: 'profile/:id',
-        element: <Profile />,
-      },
-      {
-        path: 'chat',
-        element: <Chat />,
-      },
-    ],
-  },
-]);
+);
 
 export default router;
