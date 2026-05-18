@@ -131,211 +131,254 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center min-h-screen">
-        <LuGamepad2
-          size={80}
-          className={`text-white rounded-3xl p-5 mb-4 ${!isLogin ? 'mt-10' : ''}`}
-          style={{
-            background:
-              'linear-gradient(to bottom right, var(--primary-color), var(--secondary-color))',
-          }}
-        />
-        <h1
-          className="text-4xl mb-3 font-google font-bold"
-          style={{
-            background:
-              'linear-gradient(to bottom right, var(--primary-color), var(--secondary-color))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            color: 'transparent',
-          }}
-        >
-          Klyro
-        </h1>
-        <p className="text-lg text-gray-500 font-google">
-          Your gaming social network
-        </p>
-        {successMessage && (
-          <div className="w-full max-w-md mb-1 mt-3 flex justify-center">
-            <div className="flex items-center gap-3 bg-linear-to-r from-green-400 to-emerald-500 border-0 shadow-lg px-6 py-4 rounded-xl text-white text-lg font-semibold font-google animate-fade-in">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              <span>{successMessage}</span>
-            </div>
-          </div>
-        )}
-        <form
-          onSubmit={handleSubmit(isLogin ? handleLogin : handleSignUp)}
-          className="w-full max-w-md"
-        >
-          <Card className="w-105 mt-8 p-6 shadow-lg border border-gray-300">
-            <div className="flex p-1 mb-1 bg-gray-200 rounded-2xl">
-              <Button
-                className={`${
-                  isLogin
-                    ? 'bg-white text-black font-bold rounded-2xl p-1 w-full cursor-pointer font-google'
-                    : 'bg-transparent text-black font-bold rounded-2xl p-1 w-full focus:bg-white cursor-pointer font-google'
-                }`}
-                text="Login"
-                type="button"
-                onClick={() => setIsLogin(true)}
-              />
-              <Button
-                className={`${
-                  !isLogin
-                    ? 'bg-white text-black font-bold rounded-2xl p-1 w-full cursor-pointer font-google'
-                    : 'bg-transparent text-black font-bold rounded-2xl p-1 w-full focus:bg-white cursor-pointer font-google'
-                }`}
-                text="Sign Up"
-                type="button"
-                onClick={() => setIsLogin(false)}
-              />
-            </div>
-            {!isLogin && (
-              <div className="relative">
-                <Input
-                  className="pl-10 bg-secondary border border-gray-300 rounded-md p-1 bg-gray-100 font-google"
-                  label="Username"
-                  type="text"
-                  placeholder="yourusername"
-                  name="username"
-                  register={register}
-                  errors={errors}
-                  options={{
-                    required: 'Username is required',
-                  }}
-                />
-                <MdOutlinePerson
-                  size={20}
-                  className="absolute left-3 top-8.5 text-gray-500 pointer-events-none"
-                />
-              </div>
-            )}
-            <div className="relative">
-              <Input
-                className="pl-10 bg-secondary border border-gray-300 rounded-md p-1 bg-gray-100 font-google"
-                label="Email"
-                type="email"
-                placeholder="your@email.com"
-                name="email"
-                register={register}
-                errors={errors}
-                options={{
-                  required: 'Email is required',
-                  pattern: {
-                    value: EMAIL_REGEX,
-                    message: 'Invalid email address',
-                  },
-                }}
-              />
-              <MdOutlineMail
-                size={20}
-                className="absolute left-3 top-8.5 text-gray-500 pointer-events-none"
-              />
+    <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden">
+      <div className="absolute -top-40 right-0 h-105 w-105 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.35),rgba(99,102,241,0))] blur-3xl" />
+      <div className="absolute -bottom-48 left-0 h-105 w-105 rounded-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.35),rgba(139,92,246,0))] blur-3xl" />
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(15,15,23,0.7),rgba(9,9,12,0.95))]" />
+
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-6 py-12 lg:py-16">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <section className="space-y-6 animate-fade-in-up">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
+              <LuGamepad2 className="text-violet-300" size={18} />
+              <span className="font-google">Klyro access</span>
             </div>
 
-            <div className="relative">
-              <Input
-                className="pl-10 bg-secondary border border-gray-300 rounded-md p-1 bg-gray-100 font-google"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder={'•••••••••'}
-                name="password"
-                register={register}
-                errors={errors}
-                options={{
-                  required: 'Password is required',
-                  pattern: {
-                    value: PASSWORD_REGEX,
-                    message: 'Invalid password',
-                  },
-                }}
-              />
-              <IoLockClosedOutline
-                size={20}
-                className="absolute left-3 top-8.5 text-gray-500 pointer-events-none"
-              />
-              {showPassword ? (
-                <FiEyeOff
-                  size={20}
-                  className="absolute right-3 top-8.5 text-gray-400 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                />
-              ) : (
-                <MdOutlineRemoveRedEye
-                  size={20}
-                  className="absolute right-3 top-8.5 text-gray-400 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                />
-              )}
-            </div>
+            <h1 className="font-google text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              Sign in to your gaming universe
+            </h1>
+            <p className="max-w-xl text-base leading-7 text-zinc-400">
+              Build collections, follow friends, and unlock smart
+              recommendations tailored to your play style.
+            </p>
 
-            {!isLogin && (
-              <div className="relative">
-                <Input
-                  className="pl-10 bg-secondary border border-gray-300 rounded-md p-1 bg-gray-100 font-google"
-                  label="Confirm Password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder={'•••••••••'}
-                  name="confirmPassword"
-                  register={register}
-                  errors={errors}
-                  options={{
-                    required: 'Confirm password is required',
-                    validate: (value: string) =>
-                      value === watch('password') || 'Passwords do not match',
-                  }}
-                />
-                <IoLockClosedOutline
-                  size={20}
-                  className="absolute left-3 top-8.5 text-gray-500 pointer-events-none"
-                />
-              </div>
-            )}
-
-            {isLogin && (
-              <div className="flex justify-end">
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-primary font-semibold hover:underline font-google"
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                {
+                  title: 'Curated collections',
+                  body: 'Organize every game into beautiful shelves.',
+                },
+                {
+                  title: 'AI recommendations',
+                  body: 'Discover new titles with confidence scoring.',
+                },
+                {
+                  title: 'Community reviews',
+                  body: 'Share reactions and follow creators you trust.',
+                },
+                {
+                  title: 'Premium upgrades',
+                  body: 'Unlock unlimited lists and profile perks.',
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
                 >
-                  Forgot password?
-                </Link>
-              </div>
-            )}
+                  <h3 className="text-sm font-semibold text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-zinc-400">
+                    {item.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            <Button
-              className="bg-black rounded-lg p-1.5 w-full text-white hover:bg-primary cursor-pointer font-google"
-              text={isLogin ? 'Login' : 'Sign Up'}
-              type="submit"
-            />
-          </Card>
-        </form>
-        <p
-          className={`text-sm text-center text-gray-500 mt-8 font-google ${!isLogin ? 'mb-4' : ''}`}
-        >
-          By continuing, you agree to our{' '}
-          <span className="cursor-pointer font-bold text-black text-[1.1em]">
-            Terms of Service
-          </span>{' '}
-          and{' '}
-          <span className="cursor-pointer font-bold text-black text-[1.1em]">
-            Privacy Policy
-          </span>
-        </p>
+          <section className="relative">
+            <div className="absolute -inset-1 rounded-4xl bg-linear-to-br from-violet-500/20 via-transparent to-violet-500/10 blur-xl" />
+
+            <form
+              onSubmit={handleSubmit(isLogin ? handleLogin : handleSignUp)}
+              className="relative"
+            >
+              <Card className="border border-white/10 bg-zinc-900/80 p-6 shadow-2xl shadow-black/60 backdrop-blur">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-white">
+                      {isLogin ? 'Welcome back' : 'Create your account'}
+                    </h2>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      {isLogin
+                        ? 'Sign in to continue your journey.'
+                        : 'Start building your Klyro profile.'}
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-zinc-300">
+                    Secure
+                  </div>
+                </div>
+
+                {successMessage && (
+                  <div className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+                    <span className="text-lg">✓</span>
+                    <span>{successMessage}</span>
+                  </div>
+                )}
+
+                <div className="mt-6 grid grid-cols-2 rounded-full bg-white/5 p-1">
+                  <Button
+                    className={`${
+                      isLogin
+                        ? 'rounded-full bg-white/10 text-white'
+                        : 'rounded-full text-zinc-400'
+                    } px-4 py-2 text-xs font-semibold transition`}
+                    text="Login"
+                    type="button"
+                    onClick={() => setIsLogin(true)}
+                  />
+                  <Button
+                    className={`${
+                      !isLogin
+                        ? 'rounded-full bg-white/10 text-white'
+                        : 'rounded-full text-zinc-400'
+                    } px-4 py-2 text-xs font-semibold transition`}
+                    text="Sign Up"
+                    type="button"
+                    onClick={() => setIsLogin(false)}
+                  />
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  {!isLogin && (
+                    <div className="relative">
+                      <Input
+                        className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-2.5 pl-11 text-sm text-white placeholder:text-zinc-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition font-google"
+                        label="Username"
+                        type="text"
+                        placeholder="yourusername"
+                        name="username"
+                        register={register}
+                        errors={errors}
+                        options={{
+                          required: 'Username is required',
+                        }}
+                      />
+                      <MdOutlinePerson
+                        size={18}
+                        className="absolute left-3 top-[2.65rem] text-zinc-500 pointer-events-none"
+                      />
+                    </div>
+                  )}
+
+                  <div className="relative">
+                    <Input
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-2.5 pl-11 text-sm text-white placeholder:text-zinc-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition font-google"
+                      label="Email"
+                      type="email"
+                      placeholder="your@email.com"
+                      name="email"
+                      register={register}
+                      errors={errors}
+                      options={{
+                        required: 'Email is required',
+                        pattern: {
+                          value: EMAIL_REGEX,
+                          message: 'Invalid email address',
+                        },
+                      }}
+                    />
+                    <MdOutlineMail
+                      size={18}
+                      className="absolute left-3 top-[2.65rem] text-zinc-500 pointer-events-none"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <Input
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-2.5 pl-11 pr-11 text-sm text-white placeholder:text-zinc-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition font-google"
+                      label="Password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder={'•••••••••'}
+                      name="password"
+                      register={register}
+                      errors={errors}
+                      options={{
+                        required: 'Password is required',
+                        pattern: {
+                          value: PASSWORD_REGEX,
+                          message: 'Invalid password',
+                        },
+                      }}
+                    />
+                    <IoLockClosedOutline
+                      size={18}
+                      className="absolute left-3 top-[2.65rem] text-zinc-500 pointer-events-none"
+                    />
+                    <button
+                      type="button"
+                      aria-label={
+                        showPassword ? 'Hide password' : 'Show password'
+                      }
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-3 top-[2.55rem] text-zinc-400 hover:text-white"
+                    >
+                      {showPassword ? (
+                        <FiEyeOff size={18} />
+                      ) : (
+                        <MdOutlineRemoveRedEye size={18} />
+                      )}
+                    </button>
+                  </div>
+
+                  {!isLogin && (
+                    <div className="relative">
+                      <Input
+                        className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-2.5 pl-11 text-sm text-white placeholder:text-zinc-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition font-google"
+                        label="Confirm Password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder={'•••••••••'}
+                        name="confirmPassword"
+                        register={register}
+                        errors={errors}
+                        options={{
+                          required: 'Confirm password is required',
+                          validate: (value: string) =>
+                            value === watch('password') ||
+                            'Passwords do not match',
+                        }}
+                      />
+                      <IoLockClosedOutline
+                        size={18}
+                        className="absolute left-3 top-[2.65rem] text-zinc-500 pointer-events-none"
+                      />
+                    </div>
+                  )}
+
+                  {isLogin && (
+                    <div className="flex justify-end">
+                      <Link
+                        to="/forgot-password"
+                        className="text-xs font-semibold text-violet-300 hover:text-violet-200"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
+                  )}
+
+                  <Button
+                    className="w-full rounded-xl bg-linear-to-r from-violet-500 to-indigo-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/40 transition hover:from-violet-400 hover:to-indigo-400"
+                    text={isLogin ? 'Login' : 'Sign Up'}
+                    type="submit"
+                  />
+                </div>
+
+                <p className="mt-6 text-xs text-zinc-400">
+                  By continuing, you agree to our{' '}
+                  <span className="font-semibold text-white">
+                    Terms of Service
+                  </span>{' '}
+                  and{' '}
+                  <span className="font-semibold text-white">
+                    Privacy Policy
+                  </span>
+                  .
+                </p>
+              </Card>
+            </form>
+          </section>
+        </div>
       </div>
     </div>
   );

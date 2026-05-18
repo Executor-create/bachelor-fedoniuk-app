@@ -32,7 +32,7 @@ const Recommendations = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isPremium = hasPremiumAccess(user);
-  const freeVisibleCount = 3;
+  const freeVisibleCount = 6;
 
   useEffect(() => {
     const controller = new AbortController();
