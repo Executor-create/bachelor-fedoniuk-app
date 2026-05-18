@@ -2,7 +2,6 @@ import {
   FiHome,
   FiStar,
   FiTrendingUp,
-  FiUsers,
   FiUser,
   FiMessageSquare,
   FiFolder,
@@ -122,7 +121,7 @@ const Sidebar = () => {
             />
             <SidebarItem
               name="Settings"
-              href="#"
+              href="/settings"
               icon={FiSettings}
               collapsed={collapsed}
               labelsVisible={labelsVisible}

@@ -14,6 +14,7 @@ import { updateMe } from '../../api/users';
 import { motion, type Variants } from 'framer-motion';
 import type { Plan, SubscriptionStatus } from '../../types/user.type';
 import { hasPremiumAccess } from '../../utils/subscriptionUtils';
+import EditProfileModal from './EditProfileModal';
 
 type ProfileHeaderData = {
   displayName: string;
@@ -101,6 +102,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const avatarInputRef = React.useRef<HTMLInputElement>(null);
   const [localAvatar, setLocalAvatar] = React.useState<string | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
 
   if (loading || (!profileData && isLoading)) {
     return <SkeletonBlock />;
@@ -303,6 +305,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               !hasExternalProfile && (
                 <motion.button
                   type="button"
+                  onClick={() => setEditOpen(true)}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-zinc-300 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 hover:text-white transition"
@@ -388,6 +391,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           ))}
         </div>
       </div>
+
+      <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} />
     </motion.div>
   );
 };
