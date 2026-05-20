@@ -29,9 +29,9 @@ const Settings = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
+    <div className="bg-zinc-950 h-screen overflow-hidden text-white">
       <Header />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-8">
