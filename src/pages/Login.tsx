@@ -159,7 +159,7 @@ const Login = () => {
                   body: 'Organize every game into beautiful shelves.',
                 },
                 {
-                  title: 'AI recommendations',
+                  title: 'Recommendations',
                   body: 'Discover new titles with confidence scoring.',
                 },
                 {

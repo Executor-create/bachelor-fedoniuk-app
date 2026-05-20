@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Card } from '../components/ui/Card';
-import Button from '../components/ui/Button';
 import { InputOTP } from '../components/ui/InputOTP';
 import { InputOTPSlot } from '../components/ui/InputOTPSlot';
 import { InputOTPGroup } from '../components/ui/InputOTPGroup';
@@ -12,7 +10,8 @@ import {
   setItemToLocalStorage,
 } from '../utils/localStorage';
 import { LuGamepad2 } from 'react-icons/lu';
-import { MdOutlineShield, MdAccessTime, MdArrowBack } from 'react-icons/md';
+import { MdArrowBack } from 'react-icons/md';
+import { FiShield, FiClock, FiRefreshCw, FiCheck } from 'react-icons/fi';
 
 export default function OTPPage() {
   const navigate = useNavigate();
@@ -128,148 +127,201 @@ export default function OTPPage() {
     }
   }, [otp]);
 
+  const canResend = timeLeft <= 240;
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-r from-[#6366f1] to-[#8b5cf6] rounded-2xl mb-4">
-            <LuGamepad2 className="text-white" size={32} />
-          </div>
-          <h1 className="text-3xl font-bold mb-2 bg-linear-to-r from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
-            Verify Your Account
-          </h1>
-          <p className="text-muted-foreground text-gray-500">
-            We sent a verification code to your email for security.
-          </p>
-        </div>
+    <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden">
+      {/* Ambient background blurs */}
+      <div className="absolute -top-40 right-0 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.35),rgba(99,102,241,0))] blur-3xl" />
+      <div className="absolute -bottom-48 left-0 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.35),rgba(139,92,246,0))] blur-3xl" />
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(15,15,23,0.7),rgba(9,9,12,0.95))]" />
 
-        <Card className="p-6 bg-card border-border border-gray-300">
-          <form id="otp-form" onSubmit={handleVerify} className="space-y-6">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="flex items-center gap-2 text-muted-foreground mb-3">
-                <MdOutlineShield size={18} className="text-gray-500" />
-                <span className="text-sm text-gray-500">
-                  Enter 6-digit code
-                </span>
-              </div>
-              <InputOTP
-                maxLength={6}
-                value={otp}
-                onChange={(value) => {
-                  setOtp(value);
-                  setError('');
-                }}
-                disabled={isVerifying || timeLeft === 0}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot
-                    index={0}
-                    className="w-12 h-14 text-lg bg-secondary border-border"
-                  />
-                  <InputOTPSlot
-                    index={1}
-                    className="w-12 h-14 text-lg bg-secondary border-border"
-                  />
-                  <InputOTPSlot
-                    index={2}
-                    className="w-12 h-14 text-lg bg-secondary border-border"
-                  />
-                  <InputOTPSlot
-                    index={3}
-                    className="w-12 h-14 text-lg bg-secondary border-border"
-                  />
-                  <InputOTPSlot
-                    index={4}
-                    className="w-12 h-14 text-lg bg-secondary border-border"
-                  />
-                  <InputOTPSlot
-                    index={5}
-                    className="w-12 h-14 text-lg bg-secondary border-border"
-                  />
-                </InputOTPGroup>
-              </InputOTP>
-              {error && (
-                <p className="text-sm text-red-500 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                  {error}
-                </p>
-              )}
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-6 py-12 lg:py-16">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* ── Left branding panel ── */}
+          <section className="space-y-6">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
+              <LuGamepad2 className="text-violet-300" size={18} />
+              <span className="font-google">Klyro security</span>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-              <MdAccessTime
-                size={16}
-                className={
-                  timeLeft <= 60 ? 'text-red-500' : 'text-muted-foreground'
-                }
-              />
-              <span
-                className={
-                  timeLeft <= 60 ? 'text-red-500' : 'text-muted-foreground'
-                }
-              >
-                {timeLeft > 0 ? (
-                  <>Code expires in {formatTime(timeLeft)}</>
-                ) : (
-                  <span className="text-red-500">Code expired</span>
-                )}
-              </span>
-            </div>
+            <h1 className="font-google text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              Verify your identity
+            </h1>
+            <p className="max-w-xl text-base leading-7 text-zinc-400">
+              A 6-digit code was sent to your email. Enter it below to confirm
+              your account and start your Klyro journey.
+            </p>
 
-            <Button
-              type="submit"
-              className="h-10 w-full rounded-md bg-linear-to-r from-[#6366f1] to-[#8b5cf6] hover:opacity-90 text-white font-bold"
-              disabled={otp.length !== 6 || isVerifying || timeLeft === 0}
-            >
-              {isVerifying ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Verifying...
-                </div>
-              ) : (
-                'Verify Code'
-              )}
-            </Button>
-
-            <div className="text-center pt-4 border-t border-border border-gray-300">
-              <p className="text-sm text-muted-foreground mb-2 text-gray-500">
-                Didn't receive the code?
-              </p>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleResend}
-                disabled={isResending}
-                className="text-primary hover:text-primary hover:bg-primary/10 font-bold text-gray-500"
-              >
-                {isResending ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                    Sending...
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                {
+                  icon: <FiShield size={16} className="text-violet-400" />,
+                  title: 'One-time code',
+                  body: 'Each code is unique and expires after 5 minutes.',
+                },
+                {
+                  icon: <FiClock size={16} className="text-violet-400" />,
+                  title: '5-minute window',
+                  body: 'Check your inbox and enter the code quickly.',
+                },
+                {
+                  icon: <FiRefreshCw size={16} className="text-violet-400" />,
+                  title: 'Resend anytime',
+                  body: "Didn't get it? Request a fresh code instantly.",
+                },
+                {
+                  icon: <FiCheck size={16} className="text-violet-400" />,
+                  title: 'Instant access',
+                  body: 'Verified accounts unlock full Klyro features.',
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    {item.icon}
+                    <h3 className="text-sm font-semibold text-white">
+                      {item.title}
+                    </h3>
                   </div>
-                ) : timeLeft > 240 ? (
-                  `Resend in ${formatTime(300 - timeLeft)}`
-                ) : (
-                  'Resend Code'
-                )}
-              </Button>
+                  <p className="text-xs leading-5 text-zinc-400">{item.body}</p>
+                </div>
+              ))}
             </div>
-          </form>
-        </Card>
+          </section>
 
-        <div className="text-center mt-6">
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            <MdArrowBack size={16} />
-            Back to Login
-          </Link>
+          {/* ── Right OTP form ── */}
+          <section className="relative">
+            <div className="absolute -inset-1 rounded-4xl bg-linear-to-br from-violet-500/20 via-transparent to-violet-500/10 blur-xl" />
+
+            <form id="otp-form" onSubmit={handleVerify} className="relative">
+              <div className="border border-white/10 bg-zinc-900/80 p-6 shadow-2xl shadow-black/60 backdrop-blur rounded-2xl">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-semibold text-white">
+                      Enter verification code
+                    </h2>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      We sent a 6-digit code to your email.
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-zinc-300">
+                    Secure
+                  </div>
+                </div>
+
+                {/* OTP input */}
+                <div className="flex flex-col items-center gap-5">
+                  <InputOTP
+                    maxLength={6}
+                    value={otp}
+                    onChange={(value) => {
+                      setOtp(value);
+                      setError('');
+                    }}
+                    disabled={isVerifying || timeLeft === 0}
+                  >
+                    <InputOTPGroup>
+                      {[0, 1, 2, 3, 4, 5].map((index) => (
+                        <InputOTPSlot
+                          key={index}
+                          index={index}
+                          className="w-12 h-14 text-lg bg-zinc-950/70 border-zinc-800 text-white focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 rounded-xl transition"
+                        />
+                      ))}
+                    </InputOTPGroup>
+                  </InputOTP>
+
+                  {/* Error */}
+                  {error && (
+                    <div className="w-full flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm text-red-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                      {error}
+                    </div>
+                  )}
+
+                  {/* Timer */}
+                  <div
+                    className={`flex items-center gap-2 text-sm ${timeLeft <= 60 ? 'text-red-400' : 'text-zinc-400'}`}
+                  >
+                    <FiClock size={14} />
+                    {timeLeft > 0 ? (
+                      <span>
+                        Code expires in{' '}
+                        <span className="font-mono font-semibold">
+                          {formatTime(timeLeft)}
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="text-red-400 font-semibold">
+                        Code expired
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={otp.length !== 6 || isVerifying || timeLeft === 0}
+                  className="mt-6 w-full rounded-xl bg-linear-to-r from-violet-500 to-indigo-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/40 transition hover:from-violet-400 hover:to-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isVerifying ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Verifying…
+                    </span>
+                  ) : (
+                    'Verify Code'
+                  )}
+                </button>
+
+                {/* Resend */}
+                <div className="mt-5 pt-5 border-t border-white/10 text-center">
+                  <p className="text-xs text-zinc-500 mb-2">
+                    Didn't receive the code?
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={isResending || !canResend}
+                    className="text-sm font-semibold text-violet-400 hover:text-violet-300 disabled:text-zinc-600 disabled:cursor-not-allowed transition"
+                  >
+                    {isResending ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="w-3.5 h-3.5 border-2 border-violet-400/30 border-t-violet-400 rounded-full animate-spin" />
+                        Sending…
+                      </span>
+                    ) : !canResend ? (
+                      <span className="text-zinc-500">
+                        Resend in{' '}
+                        <span className="font-mono">
+                          {formatTime(300 - timeLeft)}
+                        </span>
+                      </span>
+                    ) : (
+                      'Resend Code'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            {/* Back to login */}
+            <div className="text-center mt-5">
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition"
+              >
+                <MdArrowBack size={15} />
+                Back to Login
+              </Link>
+            </div>
+          </section>
         </div>
-
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          For security purposes, this code will expire after 5 minutes.
-        </p>
       </div>
     </div>
   );

@@ -117,7 +117,7 @@ const Home = () => {
                   <div className="flex items-center gap-2 mb-2">
                     <FiStar className="text-violet-400" size={16} />
                     <h3 className="text-white font-semibold text-sm">
-                      AI Recommendations
+                      Recommendations
                     </h3>
                   </div>
                   <p className="text-xs text-zinc-400">

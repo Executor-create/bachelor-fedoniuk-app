@@ -81,7 +81,7 @@ const Recommendations = () => {
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-zinc-300">
               <FiStar className="text-violet-300" size={14} />
-              <span>AI Recommendations</span>
+              <span>Recommendations</span>
             </div>
             <h1 className="font-google text-4xl font-semibold tracking-tight text-white sm:text-5xl">
               {personalized ? 'Recommended for You' : 'Popular This Week'}
