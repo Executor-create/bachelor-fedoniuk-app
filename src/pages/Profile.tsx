@@ -236,7 +236,7 @@ export const Profile = () => {
   }, [profileId, selectedTab]);
 
   useEffect(() => {
-    if (selectedTab !== 'Favorite Games' || !profileId) return;
+    if (!profileId) return;
 
     let mounted = true;
 
@@ -265,7 +265,7 @@ export const Profile = () => {
     return () => {
       mounted = false;
     };
-  }, [profileId, selectedTab]);
+  }, [profileId]);
 
   const updateFollowState = useCallback(
     (
@@ -436,11 +436,20 @@ export const Profile = () => {
                   Favorite Games
                 </h3>
                 {favoriteGamesLoading && (
-                  <div className="flex flex-col items-center justify-center gap-3 py-12">
-                    <span className="text-4xl opacity-20">🎮</span>
-                    <p className="text-sm text-zinc-500">
-                      Loading favorite games…
-                    </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden animate-pulse"
+                      >
+                        <div className="h-36 bg-zinc-800" />
+                        <div className="p-4 space-y-2">
+                          <div className="h-3 bg-zinc-800 rounded-full w-3/4" />
+                          <div className="h-3 bg-zinc-800 rounded-full w-2/5" />
+                          <div className="h-3 bg-zinc-800 rounded-full w-1/2 mt-3" />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
                 {favoriteGamesError && (

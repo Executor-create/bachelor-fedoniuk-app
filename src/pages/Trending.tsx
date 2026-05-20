@@ -55,10 +55,7 @@ function TrendingGameCard({
   onClick: () => void;
 }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
+    <article
       onClick={onClick}
       className="group relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/60 transition-all duration-200 cursor-pointer"
     >
@@ -92,7 +89,7 @@ function TrendingGameCard({
           </span>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }
 

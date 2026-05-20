@@ -1,6 +1,7 @@
 import api from '../config/api';
 
-type UploadResponse = { url: string } | { data: { url: string } } | string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type UploadResponse = any;
 export type UploadMediaKind = 'avatar' | 'post';
 
 const uploadPaths: Record<UploadMediaKind, string> = {
@@ -9,28 +10,51 @@ const uploadPaths: Record<UploadMediaKind, string> = {
 };
 
 const extractUrl = (payload: UploadResponse): string => {
-  if (typeof payload === 'string') return payload;
+  if (typeof payload === 'string' && payload.length > 0) return payload;
 
   if (typeof payload === 'object' && payload !== null) {
-    if ('url' in payload && typeof payload.url === 'string') return payload.url;
+    for (const key of ['url', 'file_url', 'avatar_url', 'path', 'uri', 'src', 'image_url']) {
+      if (typeof payload[key] === 'string' && payload[key].length > 0) {
+        return payload[key] as string;
+      }
+    }
+
+    if (payload.data !== undefined) {
+      if (typeof payload.data === 'string' && payload.data.length > 0) {
+        return payload.data as string;
+      }
+      if (typeof payload.data === 'object' && payload.data !== null) {
+        for (const key of ['url', 'file_url', 'avatar_url', 'path', 'uri', 'src', 'image_url']) {
+          if (typeof payload.data[key] === 'string' && payload.data[key].length > 0) {
+            return payload.data[key] as string;
+          }
+        }
+      }
+    }
+
+    if (typeof payload.result === 'object' && payload.result !== null) {
+      for (const key of ['url', 'file_url', 'avatar_url', 'path', 'uri', 'src', 'image_url']) {
+        if (typeof payload.result[key] === 'string' && payload.result[key].length > 0) {
+          return payload.result[key] as string;
+        }
+      }
+    }
+
     if (
-      'data' in payload &&
-      typeof payload.data === 'object' &&
-      payload.data !== null &&
-      'url' in payload.data &&
-      typeof payload.data.url === 'string'
+      typeof payload.profile === 'object' &&
+      payload.profile !== null &&
+      typeof payload.profile.avatar_url === 'string' &&
+      payload.profile.avatar_url.length > 0
     ) {
-      return payload.data.url;
+      return payload.profile.avatar_url as string;
     }
   }
 
+  console.error('Unexpected media upload response:', payload);
   throw new Error('Unexpected response format from media upload');
 };
 
-/**
- * Upload a file to the server and return the public URL.
- * Sends a multipart/form-data POST to the avatar or post upload route.
- */
+
 export const uploadMedia = async (file: File): Promise<string> => {
   return uploadMediaWithKind(file, 'avatar');
 };

@@ -104,12 +104,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
 
-  // Reset localAvatar whenever the user's profile avatar changes externally
-  // (e.g. after saving via EditProfileModal which calls refreshUser())
-  React.useEffect(() => {
-    setLocalAvatar(null);
-  }, [user?.profile?.avatar_url, user?.avatar_url]);
-
   if (loading || (!profileData && isLoading)) {
     return <SkeletonBlock />;
   }
@@ -185,10 +179,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
     try {
       const uploadedUrl = await uploadMedia(file);
-      await updateMe({ avatar_url: uploadedUrl });
-      setLocalAvatar(uploadedUrl);
-      URL.revokeObjectURL(previewUrl);
+      const cleanUrl = uploadedUrl.split('?cb=')[0];
+      await updateMe({ avatar_url: cleanUrl });
       await refreshUser();
+      setLocalAvatar(`${cleanUrl}?cb=${Date.now()}`);
+      URL.revokeObjectURL(previewUrl);
     } catch (err) {
       console.error('Failed to update avatar', err);
       setLocalAvatar(null);

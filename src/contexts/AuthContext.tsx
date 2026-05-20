@@ -29,39 +29,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        // Batch both updates in one render
         setUser(null);
         setIsLoading(false);
         return;
       }
 
       const response = await api.get('/auth/me');
-      // Batch both updates in one render so consumers only re-render once
-      setUser(response.data);
+      const userData = response.data;
+
+      const cb = Date.now();
+      if (userData?.profile?.avatar_url) {
+        userData.profile.avatar_url = `${userData.profile.avatar_url}?cb=${cb}`;
+      }
+      if (userData?.avatar_url) {
+        userData.avatar_url = `${userData.avatar_url}?cb=${cb}`;
+      }
+
+      setUser(userData);
       setIsLoading(false);
     } catch (error: any) {
       console.error('Error loading user profile:', error);
 
       if (error?.response?.status === 401) {
-        // token refresh flow in api interceptor may already have run.
-        // if it still fails, clear auth state.
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
       }
-
-      // Batch both updates in one render
       setUser(null);
       setIsLoading(false);
     }
   }, []);
 
-  // Initial load on mount
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
-  // refreshUser can be called externally (e.g. after login) to re-fetch the
-  // current user without triggering the isLoading spinner on the whole app.
   const refreshUser = useCallback(async () => {
     await fetchUser();
   }, [fetchUser]);

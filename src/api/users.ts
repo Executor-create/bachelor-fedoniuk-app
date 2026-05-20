@@ -264,8 +264,6 @@ const isNotFollowingError = (error: unknown): boolean => {
   const status = getResponseStatus(error);
   const message = getResponseMessage(error);
 
-  // Backend may return 404 ("You are not following this user") or 409 depending
-  // on the implementation — treat both as a no-op.
   return (
     (status === 409 || status === 404) &&
     hasAnyMessage(message, ['not following', 'not followed'])
@@ -282,8 +280,6 @@ const requestFollow = async (targetId: string): Promise<void> => {
   const response = await api.post(`/users/${targetId}/follow`);
   assertMutationStatus(response.status, 'follow');
 };
-
-// Note: older API versions used POST for unfollow; we now standardize on DELETE.
 
 const requestUnfollowByDelete = async (targetId: string): Promise<void> => {
   const response = await api.delete(`/users/${targetId}/follow`);
@@ -317,8 +313,6 @@ export const getUser = async (
   id: string,
   options: GetUserOptions = {},
 ): Promise<NormalizedUser> => {
-  // Deduplicate concurrent requests for the same user id to avoid
-  // double network calls (eg. React StrictMode mounting twice).
   const cacheKey = id;
 
   if (!(getUser as any)._inflight) {
@@ -394,7 +388,7 @@ export type UpdateMePayload = {
 };
 
 export const updateMe = async (payload: UpdateMePayload): Promise<NormalizedUser> => {
-  const response = await api.patch<RawUserResponse>('/me/avatar', payload);
+  const response = await api.patch<RawUserResponse>('/users/me/profile', payload);
 
   if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
     throw new Error('Failed to update profile');
@@ -402,7 +396,6 @@ export const updateMe = async (payload: UpdateMePayload): Promise<NormalizedUser
 
   const user = extractSingleUser(response.data);
   if (!user || !user.id) {
-    // 204 No Content — return a partial object so the caller can update state
     return {} as NormalizedUser;
   }
 

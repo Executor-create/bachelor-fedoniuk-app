@@ -27,6 +27,13 @@ const EditProfileModal = ({ open, onClose, inline = false }: Props) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Strip cache-buster query params (e.g. ?cb=<timestamp>) added by AuthContext
+  // so they are never stored back to the server.
+  const stripCacheBuster = (url?: string | null): string | null => {
+    if (!url) return null;
+    return url.split('?cb=')[0];
+  };
+
   // Populate form whenever modal opens or user changes
   useEffect(() => {
     if (!user) return;
@@ -34,7 +41,7 @@ const EditProfileModal = ({ open, onClose, inline = false }: Props) => {
     setDisplayName(profile?.display_name ?? user.display_name ?? '');
     setTag(profile?.tag ?? '');
     setBio(profile?.bio ?? '');
-    setAvatarUrl(profile?.avatar_url ?? user.avatar_url ?? null);
+    setAvatarUrl(stripCacheBuster(profile?.avatar_url ?? user.avatar_url));
     setAvatarPreview(null);
     setAvatarFile(null);
     setError(null);
