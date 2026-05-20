@@ -280,14 +280,16 @@ const EditProfileModal = ({ open, onClose, inline = false }: Props) => {
   if (inline) return form;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto">
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-black/70"
+        className="fixed inset-0 bg-black/70"
         onClick={onClose}
       />
-      {form}
+      <div className="flex min-h-full items-center justify-center px-4 py-6">
+        {form}
+      </div>
     </div>
   );
 };

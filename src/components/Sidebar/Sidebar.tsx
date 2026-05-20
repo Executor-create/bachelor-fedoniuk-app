@@ -156,7 +156,7 @@ const Sidebar = () => {
         onClick={toggle}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         className="
-          absolute bottom-33 right-0 translate-x-1/2 z-20
+          absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 z-20
           flex items-center justify-center
           w-5 h-9 rounded-full
           bg-zinc-900 border border-zinc-800
