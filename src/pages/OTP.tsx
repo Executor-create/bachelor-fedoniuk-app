@@ -12,10 +12,12 @@ import {
 import { LuGamepad2 } from 'react-icons/lu';
 import { MdArrowBack } from 'react-icons/md';
 import { FiShield, FiClock, FiRefreshCw, FiCheck } from 'react-icons/fi';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function OTPPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { refreshUser } = useAuth();
   const routeUserId = (location.state as { userId?: string } | null)?.userId;
   const storedUserId = getItemFromLocalStorage('userId');
   const userId = routeUserId ?? storedUserId;
@@ -96,6 +98,7 @@ export default function OTPPage() {
       if (isValidVerifyResponse(response)) {
         removeItemFromLocalStorage('userId');
         saveAuthentication(response);
+        await refreshUser();
         navigate('/');
       } else {
         setError('Invalid code. Please try again.');
