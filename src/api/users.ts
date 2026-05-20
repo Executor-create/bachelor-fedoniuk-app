@@ -417,3 +417,10 @@ export const unfollowUser = async (targetId: string): Promise<void> => {
     throw error;
   }
 };
+
+export const deleteMe = async (): Promise<void> => {
+  const response = await api.delete('/users/me');
+  if (![200, 204].includes(response.status)) {
+    throw new Error('Failed to delete account');
+  }
+};
