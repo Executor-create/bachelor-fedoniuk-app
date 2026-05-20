@@ -104,6 +104,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
 
+  // Reset localAvatar whenever the user's profile avatar changes externally
+  // (e.g. after saving via EditProfileModal which calls refreshUser())
+  React.useEffect(() => {
+    setLocalAvatar(null);
+  }, [user?.profile?.avatar_url, user?.avatar_url]);
+
   if (loading || (!profileData && isLoading)) {
     return <SkeletonBlock />;
   }

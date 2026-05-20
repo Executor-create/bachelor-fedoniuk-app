@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { FiTrendingUp, FiActivity, FiClock, FiAward } from 'react-icons/fi';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
@@ -54,7 +55,10 @@ function TrendingGameCard({
   onClick: () => void;
 }) {
   return (
-    <article
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
       onClick={onClick}
       className="group relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/60 transition-all duration-200 cursor-pointer"
     >
@@ -88,7 +92,7 @@ function TrendingGameCard({
           </span>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
@@ -136,47 +140,49 @@ const TrendingPage = () => {
     newReleases: '—',
   });
 
-  // Load popular games
+  // Load all data in a single mount effect to avoid duplicate requests.
+  // fetchMostLikedPosts and fetchPopularGames are each called only once;
+  // their results are reused for both the stat counters and the tab content.
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
-    setError(null);
-    fetchPopularGames(6)
-      .then((data) => {
-        if (isMounted) setGames(data);
-      })
-      .catch(() => {
-        if (isMounted) setError('Unable to fetch trending games.');
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
-  // Load stats from real API data
-  useEffect(() => {
-    let isMounted = true;
+    setLoading(true);
+    setPostsLoading(true);
+    setError(null);
+    setPostsError(null);
 
     Promise.allSettled([
-      fetchMostLikedPosts(50),
-      fetchPopularGames(50),
+      fetchPopularGames(6),
+      fetchMostLikedPosts(6),
       fetchUsers(100),
       fetchGames(50),
-    ]).then(([hotTopicsRes, trendingGamesRes, usersRes, newReleasesRes]) => {
+    ]).then(([gamesRes, postsRes, usersRes, newReleasesRes]) => {
       if (!isMounted) return;
 
-      setStats({
-        hotTopics:
-          hotTopicsRes.status === 'fulfilled'
-            ? formatCount(hotTopicsRes.value.length)
-            : '—',
-        trendingGames:
-          trendingGamesRes.status === 'fulfilled'
-            ? formatCount(trendingGamesRes.value.length)
-            : '—',
+      if (gamesRes.status === 'fulfilled') {
+        setGames(gamesRes.value);
+        setStats((prev) => ({
+          ...prev,
+          trendingGames: formatCount(gamesRes.value.length),
+        }));
+      } else {
+        setError('Unable to fetch trending games.');
+      }
+      setLoading(false);
+
+      if (postsRes.status === 'fulfilled') {
+        setPosts(postsRes.value);
+        setStats((prev) => ({
+          ...prev,
+          hotTopics: formatCount(postsRes.value.length),
+        }));
+      } else {
+        setPostsError('Unable to fetch trending posts.');
+      }
+      setPostsLoading(false);
+
+      setStats((prev) => ({
+        ...prev,
         activeUsers:
           usersRes.status === 'fulfilled'
             ? formatCount(usersRes.value.data.length)
@@ -185,33 +191,13 @@ const TrendingPage = () => {
           newReleasesRes.status === 'fulfilled'
             ? formatCount(newReleasesRes.value.data.length)
             : '—',
-      });
+      }));
     });
 
     return () => {
       isMounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (activeTab !== 'Posts' || posts.length > 0) return;
-    let isMounted = true;
-    setPostsLoading(true);
-    setPostsError(null);
-    fetchMostLikedPosts(6)
-      .then((data) => {
-        if (isMounted) setPosts(data);
-      })
-      .catch(() => {
-        if (isMounted) setPostsError('Unable to fetch trending posts.');
-      })
-      .finally(() => {
-        if (isMounted) setPostsLoading(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [activeTab, posts.length]);
 
   return (
     <div className="bg-zinc-950 h-screen overflow-hidden">
