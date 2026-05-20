@@ -87,15 +87,60 @@ export const GamesPage = () => {
           setNextCursor(null);
           setHasMore(false);
         } else {
-          const data = await fetchGames(PAGE_SIZE, cursor, {
-            genre: genreFilter !== 'All' ? genreFilter : undefined,
-            platform: platformFilter !== 'All' ? platformFilter : undefined,
-            signal: controller.signal,
-          });
+          const isFiltered = genreFilter !== 'All' || platformFilter !== 'All';
 
-          setGames(data.data);
-          setNextCursor(data.nextCursor || null);
-          setHasMore(data.hasMore);
+          if (!isFiltered) {
+            const data = await fetchGames(PAGE_SIZE, cursor, {
+              signal: controller.signal,
+            });
+            setGames(data.data);
+            setNextCursor(data.nextCursor || null);
+            setHasMore(data.hasMore);
+          } else {
+            const matchesFilters = (game: Game) => {
+              const genreMatch =
+                genreFilter === 'All' ||
+                game.genres.some((g) =>
+                  g.toLowerCase().includes(genreFilter.toLowerCase()),
+                );
+              const platformMatch =
+                platformFilter === 'All' ||
+                game.platforms.some((p) =>
+                  p.toLowerCase().includes(platformFilter.toLowerCase()),
+                );
+              return genreMatch && platformMatch;
+            };
+
+            let accumulated: Game[] = [];
+            let pageCursor: string | undefined = cursor;
+            let lastNextCursor: string | null = null;
+            let lastHasMore = false;
+
+            do {
+              const data = await fetchGames(PAGE_SIZE, pageCursor, {
+                genre: genreFilter !== 'All' ? genreFilter : undefined,
+                platform: platformFilter !== 'All' ? platformFilter : undefined,
+                signal: controller.signal,
+              });
+
+              accumulated = [
+                ...accumulated,
+                ...data.data.filter(matchesFilters),
+              ];
+              lastNextCursor = data.nextCursor || null;
+              lastHasMore = data.hasMore;
+              pageCursor = data.nextCursor || undefined;
+            } while (
+              accumulated.length < PAGE_SIZE &&
+              lastHasMore &&
+              pageCursor &&
+              !controller.signal.aborted
+            );
+
+            setGames(accumulated.slice(0, PAGE_SIZE));
+            setNextCursor(lastNextCursor);
+            setHasMore(lastHasMore);
+          }
         }
       } catch (err) {
         if ((err as DOMException).name === 'AbortError') return;
@@ -136,9 +181,19 @@ export const GamesPage = () => {
 
   const isSearching = !!searchText;
 
-  // The API already applies search/genre/platform filters server-side.
-  // No additional client-side filtering is needed.
-  const visibleGames = games;
+  const visibleGames = games.filter((game) => {
+    const genreMatch =
+      genreFilter === 'All' ||
+      game.genres.some((g) =>
+        g.toLowerCase().includes(genreFilter.toLowerCase()),
+      );
+    const platformMatch =
+      platformFilter === 'All' ||
+      game.platforms.some((p) =>
+        p.toLowerCase().includes(platformFilter.toLowerCase()),
+      );
+    return genreMatch && platformMatch;
+  });
 
   return (
     <div className="bg-zinc-950 h-screen overflow-hidden">
