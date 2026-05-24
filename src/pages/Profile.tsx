@@ -199,6 +199,10 @@ export const Profile = () => {
   }, [followingOpen, loadFollowing]);
 
   useEffect(() => {
+    if (profileId) loadFriends();
+  }, [profileId, loadFriends]);
+
+  useEffect(() => {
     if (friendsOpen) loadFriends();
   }, [friendsOpen, loadFriends]);
 
