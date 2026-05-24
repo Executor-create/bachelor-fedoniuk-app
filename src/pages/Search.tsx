@@ -387,6 +387,7 @@ const Search = () => {
                           isFollowed={isUserFollowed}
                           isPending={!!followingPending[u.id]}
                           onFollow={toggleFollow}
+                          isSelf={u.id === currentUserId}
                         />
                       );
                     })}

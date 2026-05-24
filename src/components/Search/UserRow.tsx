@@ -7,6 +7,7 @@ type UserRowProps = {
   isFollowed: boolean;
   isPending: boolean;
   onFollow: (id: string) => void;
+  isSelf?: boolean;
 };
 
 function initials(name: string): string {
@@ -25,6 +26,7 @@ export function UserRow({
   isFollowed,
   isPending,
   onFollow,
+  isSelf = false,
 }: UserRowProps) {
   const navigate = useNavigate();
 
@@ -66,18 +68,20 @@ export function UserRow({
         </div>
       </div>
 
-      <button
-        onClick={() => onFollow(user.id)}
-        disabled={isPending}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer transition whitespace-nowrap ${
-          isFollowed
-            ? 'bg-zinc-800 text-white border border-zinc-700'
-            : 'bg-linear-to-r from-emerald-500 to-sky-500 text-zinc-950'
-        } ${isPending ? 'opacity-70 cursor-not-allowed' : ''}`}
-      >
-        {isFollowed ? <FiUserCheck /> : <FiUserPlus />}
-        {isPending ? 'Updating...' : isFollowed ? 'Unfollow' : 'Follow'}
-      </button>
+      {!isSelf && (
+        <button
+          onClick={() => onFollow(user.id)}
+          disabled={isPending}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer transition whitespace-nowrap ${
+            isFollowed
+              ? 'bg-zinc-800 text-white border border-zinc-700'
+              : 'bg-linear-to-r from-emerald-500 to-sky-500 text-zinc-950'
+          } ${isPending ? 'opacity-70 cursor-not-allowed' : ''}`}
+        >
+          {isFollowed ? <FiUserCheck /> : <FiUserPlus />}
+          {isPending ? 'Updating...' : isFollowed ? 'Unfollow' : 'Follow'}
+        </button>
+      )}
     </li>
   );
 }
