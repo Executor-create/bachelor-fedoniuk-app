@@ -140,7 +140,7 @@ const FeedComposer = ({ onPostCreated }: FeedComposerProps) => {
             <textarea
               value={postText}
               onChange={(e) => setPostText(e.target.value)}
-              className="w-full min-h-[110px] resize-none rounded-xl border border-zinc-800 bg-zinc-800 px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
+              className="w-full min-h-27.5 resize-none rounded-xl border border-zinc-800 bg-zinc-800 px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
               placeholder="What's on your mind? Share your gaming thoughts..."
             />
 

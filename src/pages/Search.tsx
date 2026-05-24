@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
-import { FiSearch, FiUsers, FiX } from 'react-icons/fi';
+import { FiSearch, FiX } from 'react-icons/fi';
 import { UserRow } from '../components/Search/UserRow';
 import {
   fetchUsers,

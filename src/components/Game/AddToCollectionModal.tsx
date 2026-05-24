@@ -73,7 +73,6 @@ export function AddToCollectionModal({
           </button>
         </div>
 
-        {/* Collections list */}
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
             <div className="text-center text-zinc-400 py-8">
@@ -104,7 +103,7 @@ export function AddToCollectionModal({
                     className="w-full flex items-center gap-4 rounded-xl border border-zinc-700 bg-zinc-800 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-700/80 hover:shadow-lg hover:shadow-black/20 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div
-                      className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl flex-shrink-0 font-bold bg-gradient-to-br ${accentGradient}`}
+                      className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl shrink-0 font-bold bg-linear-to-br ${accentGradient}`}
                     >
                       <Icon size={24} className="text-white" />
                     </div>

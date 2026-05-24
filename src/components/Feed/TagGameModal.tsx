@@ -107,7 +107,7 @@ const TagGameModal = ({
           </div>
         </div>
 
-        <div className="max-h-[360px] overflow-y-auto px-5 pb-5">
+        <div className="max-h-90 overflow-y-auto px-5 pb-5">
           {isLoading ? (
             <div className="py-10 text-center text-sm text-zinc-500">
               Loading games...

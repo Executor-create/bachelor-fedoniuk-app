@@ -332,7 +332,7 @@ const Chat = () => {
               </p>
             </div>
 
-            <div className="w-full max-w-6xl mx-auto grid gap-6 lg:grid-cols-[320px_1fr] min-h-[560px] h-[calc(100vh-240px)]">
+            <div className="w-full max-w-6xl mx-auto grid gap-6 lg:grid-cols-[320px_1fr] min-h-140 h-[calc(100vh-240px)]">
               <aside className="flex flex-col gap-4 h-full min-h-0">
                 <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col h-full backdrop-blur-sm">
                   <div className="p-4 border-b border-zinc-800">
