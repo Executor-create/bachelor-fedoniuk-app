@@ -1,6 +1,10 @@
-# Klyro
+<div align="center">
 
-Klyro is a full-featured React SPA that brings together a game library, community feed, real-time chat, personalized recommendations, and a freemium subscription model — all wrapped in a dark, polished UI.
+# 🎮 Klyro App
+
+### Розробка веб-додатку соціальної мережі для геймерів з використанням гібридної рекомендаційної системи
+
+</div>
 
 ---
 
