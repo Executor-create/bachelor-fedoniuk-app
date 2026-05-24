@@ -1,8 +1,9 @@
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiMenu } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import { useSidebar } from '../contexts/SidebarContext';
 
 const UserAvatar = () => {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ const Header = () => {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const { toggleMobile } = useSidebar();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,26 +51,39 @@ const Header = () => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="flex flex-row justify-between items-center text-white px-7 py-4 bg-zinc-950 border-b border-zinc-800"
+      className="flex flex-row justify-between items-center text-white px-4 lg:px-7 py-4 bg-zinc-950 border-b border-zinc-800"
     >
-      <Link to="/" className="flex items-center gap-3 shrink-0">
-        <motion.h1
-          className="text-3xl font-google font-bold animate-logo-glow"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-          style={{
-            background: 'linear-gradient(to bottom right, #6366f1, #8b5cf6)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            color: 'transparent',
-          }}
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={toggleMobile}
+          className="lg:hidden p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+          aria-label="Open navigation"
         >
-          Klyro
-        </motion.h1>
-      </Link>
+          <FiMenu size={20} />
+        </button>
+        <Link to="/">
+          <motion.h1
+            className="text-3xl font-google font-bold animate-logo-glow"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+            style={{
+              background: 'linear-gradient(to bottom right, #6366f1, #8b5cf6)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              color: 'transparent',
+            }}
+          >
+            Klyro
+          </motion.h1>
+        </Link>
+      </div>
 
-      <form onSubmit={handleSearch} className="flex-1 max-w-lg mx-8">
+      <form
+        onSubmit={handleSearch}
+        className="hidden sm:block flex-1 max-w-lg mx-4 lg:mx-8"
+      >
         <div className="relative">
           <FiSearch
             size={15}
@@ -85,6 +100,7 @@ const Header = () => {
         </div>
       </form>
 
+      {/* Right: avatar */}
       <div className="flex items-center gap-2 shrink-0">
         <Link to="/profile">
           <motion.div

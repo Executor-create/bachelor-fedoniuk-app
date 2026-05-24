@@ -310,7 +310,7 @@ const Chat = () => {
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
 
-        <main className="page-enter relative flex-1 overflow-y-auto px-8 pt-8 pb-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="page-enter relative flex-1 overflow-y-auto px-4 md:px-8 pt-8 pb-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute -top-24 right-[-15%] h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.2),rgba(16,185,129,0))] blur-3xl" />
             <div className="absolute top-28 left-[-10%] h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.16),rgba(56,189,248,0))] blur-3xl" />

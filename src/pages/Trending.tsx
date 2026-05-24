@@ -202,7 +202,7 @@ const TrendingPage = () => {
       <Header />
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-8 gap-7 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="flex-1 overflow-y-auto flex flex-col px-4 md:px-8 pt-8 pb-8 gap-7 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-zinc-300">
               <FiTrendingUp className="text-violet-300" size={14} />
@@ -216,7 +216,7 @@ const TrendingPage = () => {
             </p>
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               iconBg="bg-red-500/15"
               icon={<FiActivity size={18} className="text-red-400" />}
@@ -274,7 +274,7 @@ const TrendingPage = () => {
               </div>
 
               {loading ? (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <SkeletonCard key={i} />
                   ))}
@@ -285,7 +285,7 @@ const TrendingPage = () => {
                   <p className="text-sm text-zinc-500">{error}</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {games.map((game, idx) => (
                     <TrendingGameCard
                       key={game.id}

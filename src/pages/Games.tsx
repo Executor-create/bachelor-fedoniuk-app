@@ -231,7 +231,7 @@ export const GamesPage = () => {
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
 
-        <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="flex-1 overflow-y-auto flex flex-col px-4 md:px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           {/* heading */}
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-zinc-300">
@@ -309,7 +309,7 @@ export const GamesPage = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 9 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
@@ -327,7 +327,7 @@ export const GamesPage = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-4 flex-1 content-start">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 content-start">
               {visibleGames.map((game) => (
                 <article
                   key={game.id}

@@ -7,12 +7,14 @@ const SidebarItem = ({
   icon: Icon,
   collapsed = false,
   labelsVisible = true,
+  onNavigate,
 }: {
   name: string;
   href?: string;
   icon: React.ComponentType<{ size: number }>;
   collapsed?: boolean;
   labelsVisible?: boolean;
+  onNavigate?: () => void;
 }) => {
   const baseClass = `
     font-google text-sm font-medium
@@ -52,6 +54,7 @@ const SidebarItem = ({
         <NavLink
           to={href}
           end={href === '/'}
+          onClick={onNavigate}
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
           }
@@ -59,7 +62,11 @@ const SidebarItem = ({
           {content}
         </NavLink>
       ) : (
-        <a href={href} className={`${baseClass} ${inactiveClass}`}>
+        <a
+          href={href}
+          onClick={onNavigate}
+          className={`${baseClass} ${inactiveClass}`}
+        >
           {content}
         </a>
       )}

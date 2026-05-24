@@ -65,7 +65,7 @@ const Home = () => {
       <Header />
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="flex-1 overflow-y-auto flex flex-col px-4 md:px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           <motion.div
             className="max-w-2xl"
             variants={containerVariants}
@@ -94,17 +94,17 @@ const Home = () => {
             </motion.p>
           </motion.div>
           <motion.div
-            className="flex gap-6"
+            className="flex flex-col lg:flex-row gap-6"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            <motion.div variants={itemVariants} className="flex-1 max-w-4xl">
+            <motion.div variants={itemVariants} className="flex-1 min-w-0">
               <Feed />
             </motion.div>
             <motion.div
               variants={itemVariants}
-              className="w-80 flex flex-col gap-4 h-fit"
+              className="w-full lg:w-80 flex flex-col gap-4 h-fit"
             >
               <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col">
                 <div className="p-4 border-b border-zinc-800">

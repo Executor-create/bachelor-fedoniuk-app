@@ -391,7 +391,7 @@ export const Profile = () => {
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
 
-        <main className="page-enter flex-1 overflow-y-auto px-8 pt-8 pb-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="page-enter flex-1 overflow-y-auto px-4 md:px-8 pt-8 pb-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           <div className="w-full max-w-6xl mx-auto flex flex-col gap-6">
             <ProfileHeader
               profileData={profileHeaderData}

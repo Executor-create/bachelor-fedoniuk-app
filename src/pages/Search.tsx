@@ -250,7 +250,7 @@ const Search = () => {
             <div className="absolute bottom-16 right-[-15%] h-96 w-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.12),rgba(251,191,36,0))] blur-3xl" />
           </div>
 
-          <div className="relative z-10 flex flex-col px-8 pt-8 pb-6 gap-8">
+          <div className="relative z-10 flex flex-col px-4 md:px-8 pt-8 pb-6 gap-8">
             <div className="max-w-2xl">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
                 <FiSearch className="text-emerald-300" size={14} />

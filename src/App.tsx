@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import router from './routes/router';
 import { AuthProvider } from './contexts/AuthContext';
+import { SidebarProvider } from './contexts/SidebarContext';
 import './index.css';
 
 const FullScreenLoader = () => (
@@ -16,9 +17,11 @@ const FullScreenLoader = () => (
 function App() {
   return (
     <AuthProvider>
-      <Suspense fallback={<FullScreenLoader />}>
-        <RouterProvider router={router} />
-      </Suspense>
+      <SidebarProvider>
+        <Suspense fallback={<FullScreenLoader />}>
+          <RouterProvider router={router} />
+        </Suspense>
+      </SidebarProvider>
     </AuthProvider>
   );
 }

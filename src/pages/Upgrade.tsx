@@ -265,7 +265,7 @@ const UpgradePage = () => {
       <Header />
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
-        <main className="page-enter relative flex-1 overflow-y-auto px-8 pb-12 pt-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
+        <main className="page-enter relative flex-1 overflow-y-auto px-4 md:px-8 pb-12 pt-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           {premiumNotice && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
