@@ -51,7 +51,6 @@ const Header = () => {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className="flex flex-row justify-between items-center text-white px-7 py-4 bg-zinc-950 border-b border-zinc-800"
     >
-      {/* Logo */}
       <Link to="/" className="flex items-center gap-3 shrink-0">
         <motion.h1
           className="text-3xl font-google font-bold animate-logo-glow"
@@ -69,7 +68,6 @@ const Header = () => {
         </motion.h1>
       </Link>
 
-      {/* Search bar */}
       <form onSubmit={handleSearch} className="flex-1 max-w-lg mx-8">
         <div className="relative">
           <FiSearch
@@ -87,7 +85,6 @@ const Header = () => {
         </div>
       </form>
 
-      {/* Right actions */}
       <div className="flex items-center gap-2 shrink-0">
         <Link to="/profile">
           <motion.div

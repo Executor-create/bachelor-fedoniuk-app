@@ -58,7 +58,6 @@ export function AddToCollectionModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-md max-h-[90vh] bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-zinc-800">
           <div>
             <h2 className="text-xl font-bold text-white">Add to Collection</h2>

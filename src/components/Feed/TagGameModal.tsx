@@ -59,7 +59,6 @@ const TagGameModal = ({
     };
   }, [open, searchQuery]);
 
-  // Reset search when modal closes
   useEffect(() => {
     if (!open) setSearchQuery('');
   }, [open]);

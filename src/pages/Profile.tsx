@@ -21,6 +21,7 @@ import {
   type NormalizedUser,
   unfollowUser,
 } from '../api/users';
+
 type ConnectionsState = {
   items: NormalizedUser[];
   isLoading: boolean;
@@ -65,9 +66,12 @@ export const Profile = () => {
     refreshProfile,
   } = useProfileUser();
 
+  const profileId = isExternalProfile ? selectedUser?.id : user?.id;
+
   const { userReviews, reviewsLoading, reviewsError } = useProfileReviews(
     selectedTab,
     isExternalProfile,
+    profileId,
   );
 
   const [activityPosts, setActivityPosts] = useState<Post[]>([]);
@@ -78,8 +82,6 @@ export const Profile = () => {
   const [favoriteGamesError, setFavoriteGamesError] = useState<string | null>(
     null,
   );
-
-  const profileId = isExternalProfile ? selectedUser?.id : user?.id;
 
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
@@ -188,22 +190,17 @@ export const Profile = () => {
     }
   }, [profileId]);
 
-  // Always reload the connection list each time the modal is opened so that
-  // any follow/unfollow changes made outside the modal are reflected.
   useEffect(() => {
     if (followersOpen) loadFollowers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followersOpen]);
+  }, [followersOpen, loadFollowers]);
 
   useEffect(() => {
     if (followingOpen) loadFollowing();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followingOpen]);
+  }, [followingOpen, loadFollowing]);
 
   useEffect(() => {
     if (friendsOpen) loadFriends();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [friendsOpen]);
+  }, [friendsOpen, loadFriends]);
 
   useEffect(() => {
     if (selectedTab !== 'Activity' || !profileId) return;
@@ -247,12 +244,10 @@ export const Profile = () => {
       try {
         const games = await getUserFavoriteGames(profileId);
         if (!mounted) return;
-
         setFavoriteGames(games);
       } catch (error) {
         console.error('Failed to load favorite games', error);
         if (!mounted) return;
-
         setFavoriteGamesError('Unable to load favorite games.');
         setFavoriteGames([]);
       } finally {
@@ -302,10 +297,6 @@ export const Profile = () => {
             ? setFollowingState
             : setFriendsState;
 
-      // Bug fix: resolve wasFollowing from connectionsFollowedMap (which reflects
-      // optimistic updates from prior clicks) before falling back to target.isFollowing.
-      // This prevents the button showing "Follow" for users you already follow when
-      // the backend connections list didn't include an is_following field.
       const resolvedIsFollowing = (
         currentConnFollowedMap: Record<string, boolean>,
       ) =>
@@ -315,7 +306,6 @@ export const Profile = () => {
             ? globalFollowed[target.id]
             : !!target.isFollowing;
 
-      // Read current map snapshot synchronously for the delta calculation
       const wasFollowing = resolvedIsFollowing(
         (() => {
           const map: Record<string, boolean> = {};
@@ -343,8 +333,6 @@ export const Profile = () => {
         } else {
           await followUser(target.id);
         }
-        // Bug fix: after a successful API call, refresh the profile header counts
-        // so the Followers/Following numbers in the stat cards stay accurate.
         refreshProfile();
       } catch (error) {
         console.error('Failed to update follow state', error);
@@ -373,17 +361,8 @@ export const Profile = () => {
     [navigate],
   );
 
-  // Bug fix: build the followed map by layering sources from least to most
-  // authoritative:
-  //   1. globalFollowed (localStorage — may be stale but covers users whose
-  //      isFollowing wasn't returned by the connections API endpoint)
-  //   2. item.isFollowing from the freshly loaded list (API truth)
-  // This ensures Follow/Unfollow buttons in the modal always show the correct
-  // state even when the backend omits is_following in the connections response.
   const connectionsFollowedMap = useMemo(() => {
-    // Start from the globally persisted follow state as a baseline
     const map: Record<string, boolean> = { ...globalFollowed };
-    // Overwrite with the fresh per-item values when available
     for (const item of [
       ...followersState.items,
       ...followingState.items,
@@ -474,9 +453,9 @@ export const Profile = () => {
                       {favoriteGames.map((game) => (
                         <article
                           key={game.id}
-                          className="group overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 transition-all duration-200 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40"
+                          className="group overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40 transition-[transform,border-color,box-shadow] ease-out duration-150 transform-gpu backface-hidden"
                         >
-                          <div className="relative h-36 overflow-hidden bg-zinc-800">
+                          <div className="relative h-36 overflow-hidden bg-zinc-800 transform-gpu">
                             <img
                               src={game.background_image}
                               alt={game.name}
@@ -484,7 +463,7 @@ export const Profile = () => {
                               decoding="async"
                               width={400}
                               height={144}
-                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              className="h-full w-full object-cover transition-transform ease-out duration-150 group-hover:scale-105 transform-gpu"
                             />
                             <div className="absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-zinc-900 to-transparent" />
                           </div>
@@ -493,7 +472,7 @@ export const Profile = () => {
                               <h4 className="truncate text-sm font-semibold text-white">
                                 {game.name}
                               </h4>
-                              <span className="shrink-0 rounded-full border border-zinc-700 px-2 py-0.5 text-[11px] font-semibold text-zinc-300">
+                              <span className="shrink-0 rounded-full border border-zinc-700 px-2 py-0.5 text-[11px] font-semibold text-zinc-300 font-mono">
                                 {typeof game.rating === 'number'
                                   ? game.rating.toFixed(1)
                                   : 'N/A'}
@@ -504,7 +483,7 @@ export const Profile = () => {
                                 ? game.genres.join(', ')
                                 : 'Game'}
                             </p>
-                            <p className="text-[11px] text-zinc-600">
+                            <p className="text-[11px] text-zinc-600 font-mono">
                               Favorited {formatFavoriteTime(game.favoritedAt)}
                             </p>
                           </div>

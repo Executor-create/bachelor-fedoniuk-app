@@ -15,6 +15,7 @@ import {
   readFollowedUsersState,
   resolveFollowedState,
 } from '../utils/followedUsersState';
+import { useAuth } from '../contexts/AuthContext';
 
 type SearchUser = NormalizedUser;
 
@@ -44,6 +45,7 @@ function UserRowSkeleton() {
 }
 
 const Search = () => {
+  const { refreshUser } = useAuth();
   const [query, setQuery] = useState('');
 
   const [users, setUsers] = useState<SearchUser[]>([]);
@@ -167,7 +169,6 @@ const Search = () => {
       setUsersNextCursor(page.nextCursor || null);
       setUsersHasMore(!!page.hasMore);
     } catch {
-      // ignore
     } finally {
       setUsersLoadingMore(false);
     }
@@ -208,6 +209,7 @@ const Search = () => {
       } else {
         await unfollowUser(id);
       }
+      refreshUser();
     } catch (err) {
       setFollowed((prev) => ({ ...prev, [id]: wasFollowing }));
       updateUserFollowState(id, wasFollowing);
@@ -244,7 +246,6 @@ const Search = () => {
           </div>
 
           <div className="relative z-10 flex flex-col px-8 pt-8 pb-6 gap-8">
-            {/* heading */}
             <div className="max-w-2xl">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
                 <FiSearch className="text-emerald-300" size={14} />
@@ -259,7 +260,6 @@ const Search = () => {
               </p>
             </div>
 
-            {/* search section */}
             <div className="flex flex-col gap-4 max-w-3xl">
               <div className="relative">
                 <svg
@@ -322,7 +322,6 @@ const Search = () => {
               )}
             </div>
 
-            {/* content */}
             <div className="flex-1">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <div>

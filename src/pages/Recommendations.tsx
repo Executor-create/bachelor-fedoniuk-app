@@ -77,7 +77,6 @@ const Recommendations = () => {
         <Sidebar />
 
         <main className="page-enter flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
-          {/* heading */}
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-zinc-300">
               <FiStar className="text-violet-300" size={14} />
@@ -92,8 +91,6 @@ const Recommendations = () => {
                 : 'Discover popular games based on community ratings and activity'}
             </p>
           </div>
-
-          {/* info box */}
           <div className="max-w-2xl border border-white/10 bg-white/5 rounded-2xl p-6">
             <div className="flex items-start gap-3">
               <div className="text-violet-400 mt-0.5">
@@ -114,10 +111,10 @@ const Recommendations = () => {
                   How recommendations work
                 </h3>
                 <p className="text-sm text-zinc-400 leading-6">
-                  Our AI analyzes your favorite games, play history, reviews,
-                  and the preferences of users with similar tastes to suggest
-                  games you'll love. The confidence score shows how well each
-                  game matches your profile.
+                  Our recommendation engine analyzes your favorite games, play
+                  history, reviews, and the preferences of users with similar
+                  tastes to suggest games you'll love. The confidence score
+                  shows how well each game matches your profile.
                 </p>
               </div>
             </div>
@@ -142,7 +139,6 @@ const Recommendations = () => {
             </div>
           )}
 
-          {/* recommendations grid */}
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
@@ -183,7 +179,6 @@ const Recommendations = () => {
                         : 'hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/60 cursor-pointer'
                     }`}
                   >
-                    {/* Confidence badge */}
                     <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
                       <span>📈</span>
                       <span>{Math.round(score * 100)}%</span>

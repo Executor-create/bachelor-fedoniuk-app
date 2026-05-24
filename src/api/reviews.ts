@@ -63,4 +63,20 @@ export const getUserReviews = async (): Promise<
   return response.data;
 };
 
-export default { createReview, getReviewsByGame, getUserReviews };
+export const getReviewsByUser = async (
+  userId: string,
+): Promise<
+  (Review & { gameId?: string; gameName?: string; gameImage?: string })[]
+> => {
+  const response = await api.get<
+    (Review & { gameId?: string; gameName?: string; gameImage?: string })[]
+  >(`/reviews/user/${userId}`);
+
+  if (response.status !== 200) {
+    throw new Error('Failed to load user reviews');
+  }
+
+  return response.data;
+};
+
+export default { createReview, getReviewsByGame, getUserReviews, getReviewsByUser };

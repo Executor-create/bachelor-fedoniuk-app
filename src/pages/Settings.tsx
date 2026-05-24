@@ -43,10 +43,8 @@ const Settings = () => {
               Manage your account preferences
             </p>
 
-            {/* Render the edit form inline (always open, no close action) */}
             <EditProfileModal open={true} onClose={() => {}} inline />
 
-            {/* Danger Zone */}
             <div className="mt-10 rounded-xl border border-red-800/50 bg-red-950/20 p-6">
               <h2 className="text-lg font-semibold text-red-400 mb-1">
                 Danger Zone
@@ -66,7 +64,6 @@ const Settings = () => {
         </main>
       </div>
 
-      {/* Delete confirmation modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
           <div className="w-full max-w-md rounded-2xl bg-zinc-900 border border-zinc-800 p-6 shadow-2xl">

@@ -64,7 +64,6 @@ const SidebarItem = ({
         </a>
       )}
 
-      {/* Tooltip when collapsed */}
       {collapsed && (
         <div
           className="

@@ -1,9 +1,5 @@
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 
-/**
- * Shared star-rating renderer used across the application.
- * Returns an array of 5 star elements based on the given numeric rating.
- */
 export function renderStars(rating: number, size = 14) {
   const rounded = Math.round(rating);
   const filledStyle = { fontSize: size };

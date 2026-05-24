@@ -10,7 +10,41 @@ import { renderStars } from '../utils/renderStars';
 type FilterValues = 'All' | 'Action' | 'RPG' | 'Strategy' | 'Shooter';
 const genres: FilterValues[] = ['All', 'Action', 'RPG', 'Strategy', 'Shooter'];
 const platforms = ['All', 'PC', 'Console', 'Mobile'];
-const PAGE_SIZE = 9; // fixed page size for 3 rows x 3 cols
+const PAGE_SIZE = 9;
+
+const CONSOLE_KEYWORDS = [
+  'playstation',
+  'xbox',
+  'nintendo',
+  'switch',
+  'wii',
+  'sega',
+  'game boy',
+  'gameboy',
+  'game gear',
+  'dreamcast',
+  'atari',
+  'ps vita',
+  'psp',
+  '3ds',
+  'ds',
+];
+const MOBILE_KEYWORDS = ['ios', 'android'];
+
+const matchesPlatformFilter = (
+  gamePlatforms: string[],
+  filter: string,
+): boolean => {
+  if (filter === 'All') return true;
+  const lower = gamePlatforms.map((p) => p.toLowerCase());
+  if (filter === 'PC')
+    return lower.some((p) => p === 'pc' || p === 'macos' || p === 'linux');
+  if (filter === 'Console')
+    return lower.some((p) => CONSOLE_KEYWORDS.some((kw) => p.includes(kw)));
+  if (filter === 'Mobile')
+    return lower.some((p) => MOBILE_KEYWORDS.some((kw) => p.includes(kw)));
+  return lower.some((p) => p.includes(filter.toLowerCase()));
+};
 
 function MetacriticBadge({ score }: { score: number }) {
   const colorClass =
@@ -103,11 +137,10 @@ export const GamesPage = () => {
                 game.genres.some((g) =>
                   g.toLowerCase().includes(genreFilter.toLowerCase()),
                 );
-              const platformMatch =
-                platformFilter === 'All' ||
-                game.platforms.some((p) =>
-                  p.toLowerCase().includes(platformFilter.toLowerCase()),
-                );
+              const platformMatch = matchesPlatformFilter(
+                game.platforms,
+                platformFilter,
+              );
               return genreMatch && platformMatch;
             };
 
@@ -119,7 +152,7 @@ export const GamesPage = () => {
             do {
               const data = await fetchGames(PAGE_SIZE, pageCursor, {
                 genre: genreFilter !== 'All' ? genreFilter : undefined,
-                platform: platformFilter !== 'All' ? platformFilter : undefined,
+                platform: platformFilter === 'PC' ? platformFilter : undefined,
                 signal: controller.signal,
               });
 
@@ -187,11 +220,7 @@ export const GamesPage = () => {
       game.genres.some((g) =>
         g.toLowerCase().includes(genreFilter.toLowerCase()),
       );
-    const platformMatch =
-      platformFilter === 'All' ||
-      game.platforms.some((p) =>
-        p.toLowerCase().includes(platformFilter.toLowerCase()),
-      );
+    const platformMatch = matchesPlatformFilter(game.platforms, platformFilter);
     return genreMatch && platformMatch;
   });
 
@@ -244,7 +273,6 @@ export const GamesPage = () => {
 
             <div className="w-px h-7 bg-zinc-800 self-center" />
 
-            {/* genre pills */}
             <div className="flex gap-1.5 flex-wrap">
               {genres.map((g) => (
                 <button
@@ -263,7 +291,6 @@ export const GamesPage = () => {
 
             <div className="w-px h-7 bg-zinc-800 self-center" />
 
-            {/* platform pills */}
             <div className="flex gap-1.5 flex-wrap">
               {platforms.map((p) => (
                 <button
@@ -281,7 +308,6 @@ export const GamesPage = () => {
             </div>
           </div>
 
-          {/* content */}
           {loading ? (
             <div className="grid grid-cols-3 gap-4">
               {Array.from({ length: 9 }).map((_, i) => (
@@ -310,7 +336,6 @@ export const GamesPage = () => {
                   }}
                   className="group bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/60 transition-all duration-200 cursor-pointer"
                 >
-                  {/* image */}
                   <div className="relative h-36 overflow-hidden bg-zinc-800 shrink-0">
                     {game.background_image ? (
                       <img
@@ -325,7 +350,6 @@ export const GamesPage = () => {
                     <div className="absolute inset-x-0 bottom-0 h-14 bg-linear-to-t from-zinc-900 to-transparent" />
                   </div>
 
-                  {/* body */}
                   <div className="p-4 flex flex-col flex-1 gap-2">
                     <h2 className="text-sm font-bold text-white leading-snug tracking-tight truncate">
                       {game.name}
@@ -370,7 +394,6 @@ export const GamesPage = () => {
             </div>
           )}
 
-          {/* pagination */}
           {!loading && !error && (
             <div className="flex items-center justify-center pt-4 border-t border-zinc-800 shrink-0 gap-4">
               <button

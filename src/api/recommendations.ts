@@ -9,12 +9,12 @@ export interface RecommendedGame {
   genres?: string[];
   platforms?: string[];
   release_date?: string | null;
-  score?: number | null; // how many of user's preferred genres/tags matched
+  score?: number | null;
 }
 
 export interface RecommendationsResponse {
   data: RecommendedGame[];
-  personalized: boolean; // false = cold-start fallback (new user)
+  personalized: boolean;
 }
 
 export async function getRecommendations(

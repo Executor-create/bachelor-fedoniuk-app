@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { FiTrendingUp, FiActivity, FiClock, FiAward } from 'react-icons/fi';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
@@ -18,7 +17,6 @@ const formatCount = (n: number): string => {
   return String(n);
 };
 
-// ─── Stat card ───────────────────────────────────────────────────────────────
 type StatCardProps = {
   icon: React.ReactNode;
   iconBg: string;
@@ -44,7 +42,6 @@ function StatCard({ icon, iconBg, value, label }: StatCardProps) {
   );
 }
 
-// ─── Game card ────────────────────────────────────────────────────────────────
 function TrendingGameCard({
   game,
   rank,
@@ -57,18 +54,19 @@ function TrendingGameCard({
   return (
     <article
       onClick={onClick}
-      className="group relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/60 transition-all duration-200 cursor-pointer"
+      className="group relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40 transition-[transform,border-color,box-shadow] ease-out duration-150 cursor-pointer transform-gpu backface-hidden"
     >
       <span className="absolute top-2 left-2 z-10 bg-violet-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
         #{rank}
       </span>
-      <div className="relative h-40 overflow-hidden bg-zinc-800 shrink-0">
+      <div className="relative h-40 overflow-hidden bg-zinc-800 shrink-0 transform-gpu">
         {game.background_image ? (
           <img
             src={game.background_image}
             alt={game.name}
             loading="lazy"
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+            decoding="async"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform ease-out duration-150 transform-gpu"
           />
         ) : (
           <div className="w-full h-full bg-zinc-800" />
@@ -93,7 +91,6 @@ function TrendingGameCard({
   );
 }
 
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
@@ -107,7 +104,6 @@ function SkeletonCard() {
   );
 }
 
-// ─── Tabs ─────────────────────────────────────────────────────────────────────
 const TABS = ['Games', 'Posts'] as const;
 type Tab = (typeof TABS)[number];
 
@@ -118,7 +114,6 @@ type Stats = {
   newReleases: string;
 };
 
-// ─── Main page ────────────────────────────────────────────────────────────────
 const TrendingPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('Games');
@@ -137,9 +132,6 @@ const TrendingPage = () => {
     newReleases: '—',
   });
 
-  // Load all data in a single mount effect to avoid duplicate requests.
-  // fetchMostLikedPosts and fetchPopularGames are each called only once;
-  // their results are reused for both the stat counters and the tab content.
   useEffect(() => {
     let isMounted = true;
 
@@ -148,48 +140,57 @@ const TrendingPage = () => {
     setError(null);
     setPostsError(null);
 
-    Promise.allSettled([
-      fetchPopularGames(6),
-      fetchMostLikedPosts(6),
-      fetchUsers(100),
-      fetchGames(50),
-    ]).then(([gamesRes, postsRes, usersRes, newReleasesRes]) => {
-      if (!isMounted) return;
-
-      if (gamesRes.status === 'fulfilled') {
-        setGames(gamesRes.value);
+    fetchPopularGames(6)
+      .then((gamesData) => {
+        if (!isMounted) return;
+        setGames(gamesData);
         setStats((prev) => ({
           ...prev,
-          trendingGames: formatCount(gamesRes.value.length),
+          trendingGames: formatCount(gamesData.length),
         }));
-      } else {
-        setError('Unable to fetch trending games.');
-      }
-      setLoading(false);
+      })
+      .catch(() => {
+        if (isMounted) setError('Unable to fetch trending games.');
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
-      if (postsRes.status === 'fulfilled') {
-        setPosts(postsRes.value);
+    fetchMostLikedPosts(6)
+      .then((postsData) => {
+        if (!isMounted) return;
+        setPosts(postsData);
         setStats((prev) => ({
           ...prev,
-          hotTopics: formatCount(postsRes.value.length),
+          hotTopics: formatCount(postsData.length),
         }));
-      } else {
-        setPostsError('Unable to fetch trending posts.');
-      }
-      setPostsLoading(false);
+      })
+      .catch(() => {
+        if (isMounted) setPostsError('Unable to fetch trending posts.');
+      })
+      .finally(() => {
+        if (isMounted) setPostsLoading(false);
+      });
 
-      setStats((prev) => ({
-        ...prev,
-        activeUsers:
-          usersRes.status === 'fulfilled'
-            ? formatCount(usersRes.value.data.length)
-            : '—',
-        newReleases:
-          newReleasesRes.status === 'fulfilled'
-            ? formatCount(newReleasesRes.value.data.length)
-            : '—',
-      }));
-    });
+    fetchUsers(100)
+      .then((usersData) => {
+        if (!isMounted) return;
+        setStats((prev) => ({
+          ...prev,
+          activeUsers: formatCount(usersData.data.length),
+        }));
+      })
+      .catch(() => {});
+
+    fetchGames(50)
+      .then((newReleasesData) => {
+        if (!isMounted) return;
+        setStats((prev) => ({
+          ...prev,
+          newReleases: formatCount(newReleasesData.data.length),
+        }));
+      })
+      .catch(() => {});
 
     return () => {
       isMounted = false;
@@ -201,8 +202,7 @@ const TrendingPage = () => {
       <Header />
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
-        <main className="page-enter flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-8 gap-7 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
-          {/* ── Page heading ── */}
+        <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-8 gap-7 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-4 py-2 text-sm text-zinc-300">
               <FiTrendingUp className="text-violet-300" size={14} />
@@ -216,7 +216,6 @@ const TrendingPage = () => {
             </p>
           </div>
 
-          {/* ── Stats row ── */}
           <div className="flex gap-4">
             <StatCard
               iconBg="bg-red-500/15"
@@ -244,7 +243,6 @@ const TrendingPage = () => {
             />
           </div>
 
-          {/* ── Tab switcher ── */}
           <div className="inline-flex items-center gap-1 bg-zinc-900 border border-zinc-800 rounded-full p-1 self-start">
             {TABS.map((tab) => (
               <button
@@ -261,7 +259,6 @@ const TrendingPage = () => {
             ))}
           </div>
 
-          {/* ── Tab content ── */}
           {activeTab === 'Games' && (
             <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col gap-5">
               <div>
@@ -394,8 +391,6 @@ const TrendingPage = () => {
               )}
             </section>
           )}
-
-          {/* Removed Genres tab as requested */}
         </main>
       </div>
     </div>

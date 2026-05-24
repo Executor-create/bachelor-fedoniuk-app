@@ -30,8 +30,6 @@ export default function Feed() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  // Track whether the current render is the first load so we can
-  // animate items in only on the initial fetch, not on refreshes.
   const isFirstLoad = useRef(true);
 
   const loadPosts = useCallback(async (signal?: AbortSignal) => {

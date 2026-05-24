@@ -44,15 +44,11 @@ export default function FeedItem({
   taggedGames,
 }: FeedItemProps) {
   const navigate = useNavigate();
-  // Initialize directly from props — no need for sync effects.
-  // The parent re-creates this component with a stable key (postId) so
-  // props will always be fresh on mount.
   const [liked, setLiked] = useState(isLiked);
   const [likeCount, setLikeCount] = useState(likes);
   const [isLikePending, setIsLikePending] = useState(false);
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-  // Close lightbox on Escape
   useEffect(() => {
     if (!isImageOpen) return;
 

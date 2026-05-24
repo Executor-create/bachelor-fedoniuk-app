@@ -7,7 +7,6 @@ import { updateMe } from '../../api/users';
 type Props = {
   open: boolean;
   onClose: () => void;
-  /** When true, renders the form inline (no backdrop / modal chrome) */
   inline?: boolean;
 };
 
@@ -27,14 +26,11 @@ const EditProfileModal = ({ open, onClose, inline = false }: Props) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Strip cache-buster query params (e.g. ?cb=<timestamp>) added by AuthContext
-  // so they are never stored back to the server.
   const stripCacheBuster = (url?: string | null): string | null => {
     if (!url) return null;
     return url.split('?cb=')[0];
   };
 
-  // Populate form whenever modal opens or user changes
   useEffect(() => {
     if (!user) return;
     const profile = user.profile;

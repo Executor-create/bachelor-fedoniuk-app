@@ -66,7 +66,6 @@ const Home = () => {
       <div className="flex h-[calc(100vh-76px)] overflow-hidden">
         <Sidebar />
         <main className="flex-1 overflow-y-auto flex flex-col px-8 pt-8 pb-6 gap-8 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
-          {/* heading */}
           <motion.div
             className="max-w-2xl"
             variants={containerVariants}
@@ -94,20 +93,15 @@ const Home = () => {
               trending in your gaming community.
             </motion.p>
           </motion.div>
-
-          {/* content */}
           <motion.div
             className="flex gap-6"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {/* Feed - left column */}
             <motion.div variants={itemVariants} className="flex-1 max-w-4xl">
               <Feed />
             </motion.div>
-
-            {/* Recommendations widget - right column */}
             <motion.div
               variants={itemVariants}
               className="w-80 flex flex-col gap-4 h-fit"

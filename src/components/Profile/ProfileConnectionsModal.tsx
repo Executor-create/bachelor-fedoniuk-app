@@ -13,7 +13,6 @@ type ProfileConnectionsModalProps = {
   onToggleFollow?: (user: NormalizedUser) => void;
   pendingFollowIds?: Record<string, boolean>;
   currentUserId?: string | null;
-  /** Resolved follow state map (userId → boolean). When provided, takes precedence over user.isFollowing. */
   followedMap?: Record<string, boolean>;
 };
 
@@ -35,7 +34,6 @@ const ProfileConnectionsModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      {/* Backdrop */}
       <button
         type="button"
         aria-label="Close connections dialog"
@@ -43,9 +41,7 @@ const ProfileConnectionsModal = ({
         onClick={onClose}
       />
 
-      {/* Modal */}
       <div className="relative z-10 w-full max-w-lg rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl shadow-black/60">
-        {/* Header */}
         <div className="flex items-start justify-between p-5 border-b border-zinc-800">
           <div>
             <h2 className="text-base font-semibold text-white">{title}</h2>
@@ -63,7 +59,6 @@ const ProfileConnectionsModal = ({
           </button>
         </div>
 
-        {/* Body */}
         <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-700">
           {isLoading ? (
             <div className="space-y-2 py-2">
@@ -84,8 +79,6 @@ const ProfileConnectionsModal = ({
             users.map((user) => {
               const handle = user.tag || '';
               const followers = user.followers ?? 0;
-              // Prefer the resolved followedMap (which reflects optimistic updates)
-              // over the raw user.isFollowing which may be stale or undefined.
               const isFollowing =
                 followedMap && user.id in followedMap
                   ? followedMap[user.id]

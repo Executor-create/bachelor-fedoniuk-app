@@ -390,7 +390,7 @@ const CreateCollectionForm = ({
               <button
                 type="button"
                 onClick={() => {
-                  if (!isPremium && isPublic) return; // can't go private without premium
+                  if (!isPremium && isPublic) return;
                   setIsPublic((prev) => !prev);
                 }}
                 disabled={!isPremium && isPublic}

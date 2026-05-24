@@ -54,12 +54,10 @@ const GameDetail = () => {
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [favoritePending, setFavoritePending] = useState(false);
 
-  // Lightbox state
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null,
   );
 
-  // Add to collection modal state
   const [showAddToCollectionModal, setShowAddToCollectionModal] =
     useState(false);
 
@@ -126,7 +124,6 @@ const GameDetail = () => {
     );
   };
 
-  // Handle keyboard navigation in lightbox
   useEffect(() => {
     if (selectedImageIndex === null || !game) return;
 
@@ -191,7 +188,6 @@ const GameDetail = () => {
             <p className="text-zinc-300">No game found.</p>
           ) : (
             <article className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-violet-950/50">
-              {/* Hero Section - Image and Title */}
               <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] mb-6">
                 <div className="relative overflow-hidden rounded-xl h-92.5">
                   <img
@@ -229,7 +225,6 @@ const GameDetail = () => {
                     </span>
                   </div>
 
-                  {/* Info Grid */}
                   <div className="grid gap-4 sm:grid-cols-2 pt-4">
                     <div className="text-sm">
                       <strong className="text-zinc-100 block mb-2">
@@ -257,7 +252,6 @@ const GameDetail = () => {
                     </div>
                   </div>
 
-                  {/* Tags */}
                   <div className="pt-2">
                     <h2 className="text-sm font-semibold text-zinc-200 mb-2">
                       Tags
@@ -320,7 +314,6 @@ const GameDetail = () => {
                 </div>
               </div>
 
-              {/* Screenshots Section - Full Width */}
               <div className="border-t border-zinc-800 pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-zinc-200">
@@ -361,7 +354,6 @@ const GameDetail = () => {
                   </p>
                 )}
               </div>
-              {/* Reviews */}
               <ReviewsSection
                 gameId={game.id}
                 game={{
@@ -381,7 +373,6 @@ const GameDetail = () => {
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
           onClick={() => setSelectedImageIndex(null)}
         >
-          {/* Close button */}
           <button
             onClick={() => setSelectedImageIndex(null)}
             className="absolute top-4 right-4 z-10 p-2 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-white transition-colors"
@@ -390,12 +381,10 @@ const GameDetail = () => {
             <IoClose size={28} />
           </button>
 
-          {/* Image counter */}
           <div className="absolute top-4 left-4 z-10 px-4 py-2 rounded-full bg-zinc-900/80 text-white text-sm font-medium">
             {selectedImageIndex + 1} / {game.screenshots.length}
           </div>
 
-          {/* Previous button */}
           {game.screenshots.length > 1 && (
             <button
               onClick={(e) => {
@@ -421,7 +410,6 @@ const GameDetail = () => {
             />
           </div>
 
-          {/* Next button */}
           {game.screenshots.length > 1 && (
             <button
               onClick={(e) => {
@@ -435,7 +423,6 @@ const GameDetail = () => {
             </button>
           )}
 
-          {/* Thumbnails */}
           {game.screenshots.length > 1 && (
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex gap-2 p-3 bg-zinc-900/80 rounded-lg max-w-full overflow-x-auto">
               {game.screenshots.map((screenshot, index) => (
@@ -461,21 +448,18 @@ const GameDetail = () => {
             </div>
           )}
 
-          {/* Help text */}
           <div className="absolute bottom-4 right-4 text-xs text-zinc-400 hidden sm:block">
             Press ESC to close • Use arrow keys to navigate
           </div>
         </div>
       )}
 
-      {/* Add to Collection Modal */}
       {showAddToCollectionModal && game && (
         <AddToCollectionModal
           gameId={game.id}
           gameName={game.name}
           onClose={() => setShowAddToCollectionModal(false)}
           onGameAdded={() => {
-            // Optional: Show success message or refresh
             console.log('Game added to collection');
           }}
         />

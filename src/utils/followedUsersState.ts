@@ -37,7 +37,6 @@ export const persistFollowedUsersState = (value: FollowedUsersState): void => {
 export const mergeFollowedStateFromUsers = <T extends FollowableUser>(
   prev: FollowedUsersState,
   items: T[],
-  /** When true, backend values always win (e.g. on a fresh full-page load). */
   trustBackend = false,
 ): FollowedUsersState => {
   const next = { ...prev };
@@ -48,13 +47,9 @@ export const mergeFollowedStateFromUsers = <T extends FollowableUser>(
     }
 
     if (user.isFollowing) {
-      // Backend true always wins so stale local false recovers.
       next[user.id] = true;
       continue;
     }
-
-    // Backend false: always write when trustBackend is set, otherwise only
-    // write when there is no existing local value (preserves optimistic state).
     if (trustBackend || !(user.id in next)) {
       next[user.id] = false;
     }

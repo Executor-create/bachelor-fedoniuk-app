@@ -134,14 +134,12 @@ export default function OTPPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden">
-      {/* Ambient background blurs */}
       <div className="absolute -top-40 right-0 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.35),rgba(99,102,241,0))] blur-3xl" />
       <div className="absolute -bottom-48 left-0 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.35),rgba(139,92,246,0))] blur-3xl" />
       <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(15,15,23,0.7),rgba(9,9,12,0.95))]" />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-6 py-12 lg:py-16">
         <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          {/* ── Left branding panel ── */}
           <section className="space-y-6">
             <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
               <LuGamepad2 className="text-violet-300" size={18} />
@@ -195,13 +193,11 @@ export default function OTPPage() {
             </div>
           </section>
 
-          {/* ── Right OTP form ── */}
           <section className="relative">
             <div className="absolute -inset-1 rounded-4xl bg-linear-to-br from-violet-500/20 via-transparent to-violet-500/10 blur-xl" />
 
             <form id="otp-form" onSubmit={handleVerify} className="relative">
               <div className="border border-white/10 bg-zinc-900/80 p-6 shadow-2xl shadow-black/60 backdrop-blur rounded-2xl">
-                {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-semibold text-white">
@@ -216,7 +212,6 @@ export default function OTPPage() {
                   </div>
                 </div>
 
-                {/* OTP input */}
                 <div className="flex flex-col items-center gap-5">
                   <InputOTP
                     maxLength={6}
@@ -238,7 +233,6 @@ export default function OTPPage() {
                     </InputOTPGroup>
                   </InputOTP>
 
-                  {/* Error */}
                   {error && (
                     <div className="w-full flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm text-red-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
@@ -246,7 +240,6 @@ export default function OTPPage() {
                     </div>
                   )}
 
-                  {/* Timer */}
                   <div
                     className={`flex items-center gap-2 text-sm ${timeLeft <= 60 ? 'text-red-400' : 'text-zinc-400'}`}
                   >
@@ -266,7 +259,6 @@ export default function OTPPage() {
                   </div>
                 </div>
 
-                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={otp.length !== 6 || isVerifying || timeLeft === 0}
@@ -282,7 +274,6 @@ export default function OTPPage() {
                   )}
                 </button>
 
-                {/* Resend */}
                 <div className="mt-5 pt-5 border-t border-white/10 text-center">
                   <p className="text-xs text-zinc-500 mb-2">
                     Didn't receive the code?
@@ -313,7 +304,6 @@ export default function OTPPage() {
               </div>
             </form>
 
-            {/* Back to login */}
             <div className="text-center mt-5">
               <Link
                 to="/login"

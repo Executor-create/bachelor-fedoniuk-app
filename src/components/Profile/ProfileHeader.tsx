@@ -222,7 +222,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       transition={{ duration: 0.45 }}
       className="rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden"
     >
-      {/* Hidden avatar file input */}
       {canEditAvatar && (
         <input
           ref={avatarInputRef}
@@ -233,7 +232,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         />
       )}
 
-      {/* Banner with shimmer */}
       <div className="h-28 bg-linear-to-r from-violet-600/30 via-purple-600/20 to-zinc-900 relative overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent"
@@ -262,7 +260,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               alt={displayName}
               className="w-24 h-24 rounded-full object-cover bg-zinc-800"
             />
-            {/* Upload overlay */}
             {canEditAvatar && (
               <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 {isUploadingAvatar ? (
@@ -319,7 +316,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
         </div>
 
-        {/* Name + handle */}
         <motion.div
           className="mb-3"
           initial={{ opacity: 0, x: -10 }}
@@ -340,7 +336,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           {handle && <p className="text-sm text-zinc-500 mt-0.5">{handle}</p>}
         </motion.div>
 
-        {/* Bio */}
         {bio && (
           <motion.p
             className="text-sm text-zinc-400 leading-relaxed mb-3 max-w-xl"
@@ -352,7 +347,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </motion.p>
         )}
 
-        {/* Joined date */}
         <motion.div
           className="flex items-center gap-1.5 text-xs text-zinc-500 mb-6"
           initial={{ opacity: 0 }}
@@ -363,7 +357,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <span>{joined ? `Joined ${joined}` : 'Join date unknown'}</span>
         </motion.div>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {statCards.map(({ icon, value, label, onClick }, i) => (
             <motion.button

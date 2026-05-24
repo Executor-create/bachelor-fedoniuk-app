@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getUserReviews, type Review } from '../api/reviews';
+import { getUserReviews, getReviewsByUser, type Review } from '../api/reviews';
 
 export type ReviewWithGameData = Review & {
   gameId?: string;
@@ -13,20 +13,44 @@ export type UseProfileReviewsReturn = {
   reviewsError: string | null;
 };
 
+const normalizeReviews = (
+  raw: (Review & { gameId?: string; gameName?: string; gameImage?: string })[],
+): ReviewWithGameData[] =>
+  raw.map((r) => {
+    const rr = r as ReviewWithGameData & Record<string, any>;
+    return {
+      ...r,
+      gameId: rr.game?.id || rr.game_id || rr.gameId,
+      gameName: rr.game?.name || rr.game?.title || rr.gameName,
+      gameImage:
+        rr.game?.background_image ||
+        rr.game?.backgroundImage ||
+        rr.gameImage,
+      date: r.created_at
+        ? new Date(r.created_at).toLocaleDateString()
+        : undefined,
+    };
+  });
+
 /**
- * Fetches the current user's reviews for the profile page.
- * Only fires for the own-profile view (not external profiles).
+ * Fetches reviews for the profile page.
+ * - Own profile: calls GET /reviews/me
+ * - External profile: calls GET /reviews/user/:profileUserId
  */
 export function useProfileReviews(
   selectedTab: string,
   isExternalProfile: boolean,
+  profileUserId?: string,
 ): UseProfileReviewsReturn {
   const [userReviews, setUserReviews] = useState<ReviewWithGameData[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [reviewsError, setReviewsError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isExternalProfile || selectedTab !== 'Reviews') return;
+    if (selectedTab !== 'Reviews') return;
+
+    // For external profiles we need the userId to be resolved first
+    if (isExternalProfile && !profileUserId) return;
 
     let active = true;
 
@@ -34,29 +58,20 @@ export function useProfileReviews(
       setReviewsLoading(true);
       setReviewsError(null);
       try {
-        const reviews = await getUserReviews();
+        const raw = isExternalProfile
+          ? await getReviewsByUser(profileUserId!)
+          : await getUserReviews();
+
         if (!active) return;
-        setUserReviews(
-          reviews.map((r) => {
-            const rr = r as ReviewWithGameData & Record<string, any>;
-            return {
-              ...r,
-              gameId: rr.game?.id || rr.game_id || rr.gameId,
-              gameName: rr.game?.name || rr.game?.title || rr.gameName,
-              gameImage:
-                rr.game?.background_image ||
-                rr.game?.backgroundImage ||
-                rr.gameImage,
-              date: r.created_at
-                ? new Date(r.created_at).toLocaleDateString()
-                : undefined,
-            };
-          }),
-        );
+        setUserReviews(normalizeReviews(raw));
       } catch (error) {
         if (!active) return;
         console.error('Failed to load reviews:', error);
-        setReviewsError('Unable to load your reviews.');
+        setReviewsError(
+          isExternalProfile
+            ? 'Unable to load reviews for this user.'
+            : 'Unable to load your reviews.',
+        );
         setUserReviews([]);
       } finally {
         if (active) setReviewsLoading(false);
@@ -68,7 +83,7 @@ export function useProfileReviews(
     return () => {
       active = false;
     };
-  }, [isExternalProfile, selectedTab]);
+  }, [isExternalProfile, profileUserId, selectedTab]);
 
   return { userReviews, reviewsLoading, reviewsError };
 }

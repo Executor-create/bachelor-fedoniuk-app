@@ -190,7 +190,6 @@ const EditCollectionForm = ({
           </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {/* Icon picker */}
             <label className="block">
               <span className="mb-1.5 block text-sm font-semibold text-zinc-900">
                 Icon
@@ -242,7 +241,6 @@ const EditCollectionForm = ({
               </div>
             </label>
 
-            {/* Color picker */}
             <label className="block">
               <span className="mb-1.5 block text-sm font-semibold text-zinc-900">
                 Color
@@ -298,7 +296,6 @@ const EditCollectionForm = ({
             </label>
           </div>
 
-          {/* Visibility toggle */}
           <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-3">
             <div className="flex items-center justify-between gap-4">
               <div>

@@ -11,10 +11,6 @@ import { HiSparkles } from 'react-icons/hi2';
 
 export type IconComponent = ComponentType<{ size?: number; className?: string }>;
 
-/**
- * Maps collection icon keys (as stored in the API) to React icon components.
- * Shared between Collections list and CollectionDetail pages.
- */
 export const COLLECTION_ICON_MAP: Record<string, IconComponent> = {
   Heart: FiHeart,
   Star: FiStar,
@@ -26,9 +22,6 @@ export const COLLECTION_ICON_MAP: Record<string, IconComponent> = {
   Zap: FiZap,
 };
 
-/**
- * Maps color keys to Tailwind gradient accent classes.
- */
 export const COLLECTION_COLOR_ACCENT_MAP: Record<string, string> = {
   Rose: 'from-rose-500/90 to-rose-500/30',
   Blue: 'from-blue-500/90 to-blue-500/30',
@@ -40,9 +33,6 @@ export const COLLECTION_COLOR_ACCENT_MAP: Record<string, string> = {
   Yellow: 'from-amber-400/90 to-amber-500/30',
 };
 
-/**
- * Maps color keys to arrays of 4 tile-preview gradient classes.
- */
 export const COLLECTION_COLOR_PREVIEW_MAP: Record<string, string[]> = {
   Rose: [
     'from-rose-500/80 via-rose-400/20 to-slate-950',
@@ -94,10 +84,6 @@ export const COLLECTION_COLOR_PREVIEW_MAP: Record<string, string[]> = {
   ],
 };
 
-/**
- * Converts a snake_case, kebab-case, or space-separated string into Title Case.
- * Falls back to `fallback` when the value is null/undefined/empty.
- */
 export const toCollectionTitle = (
   value: string | null | undefined,
   fallback: string,

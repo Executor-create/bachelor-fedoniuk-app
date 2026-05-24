@@ -30,7 +30,6 @@ const ProfileReviewCard: React.FC<ProfileReviewCardProps> = ({
   return (
     <div className="group bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40 transition-all duration-200">
       <div className="flex gap-4 p-4">
-        {/* Game Thumbnail */}
         <div className="shrink-0">
           <img
             src={
@@ -42,13 +41,11 @@ const ProfileReviewCard: React.FC<ProfileReviewCardProps> = ({
           />
         </div>
 
-        {/* Review Content */}
         <div className="flex-1 min-w-0">
           <h3 className="text-white font-semibold text-base leading-snug truncate mb-2">
             {gameTitle}
           </h3>
 
-          {/* Rating */}
           <div className="flex items-center gap-1.5 mb-2">
             <div className="flex items-center gap-0.5">
               {renderStars(rating)}
@@ -58,12 +55,10 @@ const ProfileReviewCard: React.FC<ProfileReviewCardProps> = ({
             </span>
           </div>
 
-          {/* Review Text */}
           <p className="text-zinc-400 text-sm leading-relaxed line-clamp-2">
             {reviewText}
           </p>
 
-          {/* Date */}
           {date && <p className="text-xs text-zinc-600 mt-2">{date}</p>}
         </div>
       </div>

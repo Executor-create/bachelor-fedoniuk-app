@@ -12,8 +12,6 @@ import { hasPremiumAccess } from '../../utils/subscriptionUtils';
 
 const tabs = ['Reviews', 'Community', 'Related Games'];
 
-// removed mock/sample reviews
-
 const ReviewsSection: React.FC<{
   gameId: string;
   game?: { name: string; genres: string[]; background_image?: string };
@@ -81,7 +79,6 @@ const ReviewsSection: React.FC<{
         console.error(err);
         if (!mounted) return;
         setError('Unable to load reviews.');
-        // on error, show empty list
         setReviews([]);
       } finally {
         if (mounted) setLoading(false);

@@ -60,12 +60,10 @@ const Sidebar = () => {
   };
 
   return (
-    // Outer: controls width, `relative` for the toggle button — NO overflow here
     <div
       className="relative shrink-0 h-[calc(100vh-76px)] transition-[width] duration-300 ease-in-out"
       style={{ width: collapsed ? '4.5rem' : '17rem' }}
     >
-      {/* Inner: the actual scrollable sidebar — overflow lives here */}
       <div className="h-full w-full bg-zinc-950 text-white flex flex-col border-r border-zinc-800 overflow-y-auto scrollbar-hide p-3">
         <ul>
           {items.map((item) => (
@@ -132,7 +130,6 @@ const Sidebar = () => {
                 try {
                   await apiLogout();
                 } catch (err) {
-                  // ignore API errors
                 } finally {
                   removeItemFromLocalStorage('token');
                   removeItemFromLocalStorage('refreshToken');
@@ -151,7 +148,6 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Toggle button */}
       <button
         onClick={toggle}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}

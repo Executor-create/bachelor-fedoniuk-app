@@ -12,6 +12,7 @@ import {
   readFollowedUsersState,
   resolveFollowedState,
 } from '../utils/followedUsersState';
+import { useAuth } from '../contexts/AuthContext';
 
 type ProfileRouteState = {
   user?: NormalizedUser;
@@ -36,6 +37,7 @@ export type UseProfileUserReturn = {
  * plus follow/unfollow logic with optimistic updates and localStorage persistence.
  */
 export function useProfileUser(): UseProfileUserReturn {
+  const { refreshUser } = useAuth();
   const { id } = useParams<{ id?: string }>();
   const location = useLocation();
   const stateUser = (location.state as ProfileRouteState | null)?.user;
@@ -171,6 +173,9 @@ export function useProfileUser(): UseProfileUserReturn {
       } else {
         await unfollowUser(targetId);
       }
+      // Refresh the logged-in user's following_count so the own Profile page
+      // shows the correct count without requiring a page reload.
+      refreshUser();
     } catch {
       // Revert optimistic update on failure
       setFollowed((prev) => ({ ...prev, [targetId]: wasFollowing }));
