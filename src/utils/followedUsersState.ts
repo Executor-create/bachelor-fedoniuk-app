@@ -1,7 +1,5 @@
 import { getItemFromLocalStorage, setItemToLocalStorage } from './localStorage';
 
-export const FOLLOWED_USERS_STORAGE_KEY = 'klyro_followed_users';
-
 export type FollowedUsersState = Record<string, boolean>;
 
 type FollowableUser = {
@@ -9,9 +7,13 @@ type FollowableUser = {
   isFollowing?: boolean;
 };
 
-export const readFollowedUsersState = (): FollowedUsersState => {
+export const getFollowedUsersStorageKey = (userId: string): string =>
+  `klyro_followed_users:${userId}`;
+
+export const readFollowedUsersState = (userId: string): FollowedUsersState => {
+  if (!userId) return {};
   try {
-    const raw = getItemFromLocalStorage(FOLLOWED_USERS_STORAGE_KEY);
+    const raw = getItemFromLocalStorage(getFollowedUsersStorageKey(userId));
     if (!raw) return {};
 
     const parsed = JSON.parse(raw);
@@ -30,8 +32,9 @@ export const readFollowedUsersState = (): FollowedUsersState => {
   }
 };
 
-export const persistFollowedUsersState = (value: FollowedUsersState): void => {
-  setItemToLocalStorage(FOLLOWED_USERS_STORAGE_KEY, JSON.stringify(value));
+export const persistFollowedUsersState = (userId: string, value: FollowedUsersState): void => {
+  if (!userId) return;
+  setItemToLocalStorage(getFollowedUsersStorageKey(userId), JSON.stringify(value));
 };
 
 export const mergeFollowedStateFromUsers = <T extends FollowableUser>(

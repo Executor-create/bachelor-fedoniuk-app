@@ -26,18 +26,13 @@ export type UseProfileUserReturn = {
   externalIsFollowing: boolean | undefined;
   followActionPending: boolean;
   toggleExternalFollow: () => Promise<void>;
-  /** Persisted follow state map (userId → boolean) — used to initialise modal follow buttons. */
   followed: Record<string, boolean>;
-  /** Re-fetches the external profile user (e.g. to refresh follower counts after a list action). */
   refreshProfile: () => Promise<void>;
 };
 
-/**
- * Handles loading the external profile user (when visiting /profile/:id),
- * plus follow/unfollow logic with optimistic updates and localStorage persistence.
- */
 export function useProfileUser(): UseProfileUserReturn {
-  const { refreshUser } = useAuth();
+  const { user: currentUser, refreshUser } = useAuth();
+  const currentUserId = currentUser?.id ?? '';
   const { id } = useParams<{ id?: string }>();
   const location = useLocation();
   const stateUser = (location.state as ProfileRouteState | null)?.user;
@@ -51,16 +46,18 @@ export function useProfileUser(): UseProfileUserReturn {
   );
   const [selectedUserError, setSelectedUserError] = useState<string | null>(null);
   const [followed, setFollowed] = useState<Record<string, boolean>>(() =>
-    readFollowedUsersState(),
+    readFollowedUsersState(currentUserId),
   );
   const [followActionPending, setFollowActionPending] = useState(false);
 
-  // Persist follow state to localStorage on every change
   useEffect(() => {
-    persistFollowedUsersState(followed);
-  }, [followed]);
+    setFollowed(readFollowedUsersState(currentUserId));
+  }, [currentUserId]);
 
-  // Load user data (with instant render from route state when available)
+  useEffect(() => {
+    persistFollowedUsersState(currentUserId, followed);
+  }, [currentUserId, followed]);
+
   useEffect(() => {
     let active = true;
 
@@ -92,7 +89,6 @@ export function useProfileUser(): UseProfileUserReturn {
         const user = await getUser(id);
         if (!active) return;
         setSelectedUser(user);
-        // trustBackend=true so a fresh API response can clear a stale local true
         setFollowed((prev) => mergeFollowedStateFromUsers(prev, [user], true));
       } catch (error) {
         if (!active) return;
@@ -114,9 +110,6 @@ export function useProfileUser(): UseProfileUserReturn {
     return () => {
       active = false;
     };
-    // Use stateUser?.id (primitive) instead of the whole stateUser object to
-    // avoid re-running the effect when location.state produces a new reference.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isExternalProfile, stateUser?.id]);
 
   const externalIsFollowing = useMemo(() => {
@@ -128,9 +121,6 @@ export function useProfileUser(): UseProfileUserReturn {
     if (!isExternalProfile || !id) return;
     try {
       const freshUser = await getUser(id);
-      // Only update stat counts (followers, following, games_count etc.) — do NOT
-      // overwrite isFollowing.  The follow state is owned by the optimistic updates
-      // and a stale re-fetch could flip it back to the wrong value.
       setSelectedUser((prev) =>
         prev
           ? {
@@ -139,9 +129,7 @@ export function useProfileUser(): UseProfileUserReturn {
           }
           : freshUser,
       );
-      // Intentionally skip mergeFollowedStateFromUsers here for the same reason.
     } catch {
-      // Silently ignore — stale data is still displayed
     }
   }, [isExternalProfile, id]);
 
@@ -173,11 +161,8 @@ export function useProfileUser(): UseProfileUserReturn {
       } else {
         await unfollowUser(targetId);
       }
-      // Refresh the logged-in user's following_count so the own Profile page
-      // shows the correct count without requiring a page reload.
       refreshUser();
     } catch {
-      // Revert optimistic update on failure
       setFollowed((prev) => ({ ...prev, [targetId]: wasFollowing }));
       setSelectedUser((prev) => {
         if (!prev) return prev;

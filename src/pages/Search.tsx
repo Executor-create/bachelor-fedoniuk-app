@@ -45,7 +45,8 @@ function UserRowSkeleton() {
 }
 
 const Search = () => {
-  const { refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
+  const currentUserId = user?.id ?? '';
   const [query, setQuery] = useState('');
 
   const [users, setUsers] = useState<SearchUser[]>([]);
@@ -55,7 +56,7 @@ const Search = () => {
   const [usersHasMore, setUsersHasMore] = useState(false);
 
   const [followed, setFollowed] = useState<Record<string, boolean>>(() =>
-    readFollowedUsersState(),
+    readFollowedUsersState(currentUserId),
   );
   const [followingPending, setFollowingPending] = useState<
     Record<string, boolean>
@@ -94,8 +95,12 @@ const Search = () => {
   }, []);
 
   useEffect(() => {
-    persistFollowedUsersState(followed);
-  }, [followed]);
+    setFollowed(readFollowedUsersState(currentUserId));
+  }, [currentUserId]);
+
+  useEffect(() => {
+    persistFollowedUsersState(currentUserId, followed);
+  }, [currentUserId, followed]);
 
   useEffect(() => {
     if (usersController.current) usersController.current.abort();
