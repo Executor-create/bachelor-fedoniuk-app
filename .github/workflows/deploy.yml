@@ -19,25 +19,23 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-          cache-dependency-path: apps/client/yarn.lock
+          cache-dependency-path: yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-        working-directory: apps/client
 
       - name: Build app
         run: yarn build
-        working-directory: apps/client
 
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read
         env:
-          SOURCE_DIR: apps/client/dist/
+          SOURCE_DIR: dist/
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
