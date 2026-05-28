@@ -528,7 +528,7 @@ const Chat = () => {
                         >
                           <div className="max-w-[75%]">
                             <div
-                              className={`px-4 py-2 rounded-2xl text-sm shadow-lg ${
+                              className={`px-4 py-2 rounded-2xl text-sm shadow-lg break-words ${
                                 m.fromMe
                                   ? 'bg-linear-to-br from-emerald-400 to-sky-500 text-zinc-950'
                                   : 'bg-zinc-800/80 text-zinc-200'
