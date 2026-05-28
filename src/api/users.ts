@@ -57,6 +57,7 @@ export type NormalizedUser = {
   joinedAt?: string | null;
   createdAt?: string | null;
   isFollowing?: boolean;
+  isVerified?: boolean;
 };
 
 const readIsFollowing = (user: ApiUser): boolean | undefined => {
@@ -211,6 +212,7 @@ const normalizeUser = (user: ApiUser): NormalizedUser => {
       profile.joined_at ?? user.joined_at ?? (user as any).created_at ?? null,
     createdAt: profile.created_at ?? user.created_at ?? (user as any).created_at ?? null,
     isFollowing: readIsFollowing({ ...user, ...profile }),
+    isVerified: user.is_verified ?? (user as any).isVerified,
   };
 };
 
@@ -359,14 +361,20 @@ const getConnections = async (path: string): Promise<NormalizedUser[]> => {
   return extractUsersList(response.data).map(normalizeUser);
 };
 
-export const getFollowers = async (id: string): Promise<NormalizedUser[]> =>
-  getConnections(`/users/${id}/followers`);
+export const getFollowers = async (id: string): Promise<NormalizedUser[]> => {
+  const users = await getConnections(`/users/${id}/followers`);
+  return users.filter((u) => u.isVerified === true);
+};
 
-export const getFollowing = async (id: string): Promise<NormalizedUser[]> =>
-  getConnections(`/users/${id}/following`);
+export const getFollowing = async (id: string): Promise<NormalizedUser[]> => {
+  const users = await getConnections(`/users/${id}/following`);
+  return users.filter((u) => u.isVerified === true);
+};
 
-export const getFriends = async (id: string): Promise<NormalizedUser[]> =>
-  getConnections(`/users/${id}/friends`);
+export const getFriends = async (id: string): Promise<NormalizedUser[]> => {
+  const users = await getConnections(`/users/${id}/friends`);
+  return users.filter((u) => u.isVerified === true);
+};
 
 export const followUser = async (targetId: string): Promise<void> => {
   try {

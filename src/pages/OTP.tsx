@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { InputOTP } from '../components/ui/InputOTP';
 import { InputOTPSlot } from '../components/ui/InputOTPSlot';
 import { InputOTPGroup } from '../components/ui/InputOTPGroup';
@@ -305,13 +305,17 @@ export default function OTPPage() {
             </form>
 
             <div className="text-center mt-5">
-              <Link
-                to="/login"
+              <button
+                type="button"
+                onClick={() => {
+                  removeItemFromLocalStorage('userId');
+                  navigate('/login');
+                }}
                 className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition"
               >
                 <MdArrowBack size={15} />
                 Back to Login
-              </Link>
+              </button>
             </div>
           </section>
         </div>
