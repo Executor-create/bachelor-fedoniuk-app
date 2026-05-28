@@ -24,25 +24,36 @@ export interface LoginResponse {
   user: User;
 }
 
+const extractErrorMessage = (error: any): string => {
+  return (
+    error?.response?.data?.message ||
+    error?.response?.data?.error ||
+    error?.message ||
+    'An unexpected error occurred'
+  );
+};
+
 export const signUp = async (data: SignUpRequest): Promise<SignUpResponse> => {
-  const response = await api.post<SignUpResponse>("/auth/signup", data);
-
-  if (response.status !== 201) {
-    throw new Error("Failed to sign up");
+  try {
+    const response = await api.post<SignUpResponse>("/auth/signup", data);
+    return response.data;
+  } catch (error: any) {
+    const message = extractErrorMessage(error);
+    const field = error?.response?.data?.field ?? null;
+    const err: any = new Error(message);
+    err.field = field;
+    throw err;
   }
-
-  return response.data;
-}
+};
 
 export const login = async (data: LoginRequest): Promise<LoginResponse> => {
-  const response = await api.post("/auth/login", data);
-
-  if (response.status !== 200) {
-    throw new Error("Failed to log in");
+  try {
+    const response = await api.post("/auth/login", data);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error));
   }
-
-  return response.data;
-}
+};
 
 export interface VerifyOtpRequest {
   otp: string;
@@ -61,14 +72,13 @@ export interface VerifyOtpResponse {
 }
 
 export const verifyOtp = async ({ otp, userId }: VerifyOtpRequest): Promise<VerifyOtpResponse> => {
-  const response = await api.post<VerifyOtpResponse>("/auth/verify-otp", { otp, userId });
-
-  if (response.status !== 200) {
-    throw new Error("Failed to verify OTP");
+  try {
+    const response = await api.post<VerifyOtpResponse>("/auth/verify-otp", { otp, userId });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error));
   }
-
-  return response.data;
-}
+};
 
 export interface ResetPasswordRequest {
   token: string;
@@ -80,16 +90,16 @@ export interface ResetPasswordResponse {
 }
 
 export const resetPassword = async ({ token, newPassword }: ResetPasswordRequest): Promise<ResetPasswordResponse> => {
-  const response = await api.post<ResetPasswordResponse>("/auth/reset-password", {
-    newPassword: { token, newPassword },
-  });
-
-  if (response.status !== 200) {
-    throw new Error("Failed to reset password");
+  try {
+    const response = await api.post<ResetPasswordResponse>("/auth/reset-password", {
+      token,
+      newPassword,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error));
   }
-
-  return response.data;
-}
+};
 
 export interface RefreshTokenRequest {
   refreshToken: string;
@@ -103,34 +113,32 @@ export interface RefreshTokenResponse {
 export const refreshToken = async (
   data: RefreshTokenRequest,
 ): Promise<RefreshTokenResponse> => {
-  const response = await api.post<RefreshTokenResponse>("/auth/refresh", data);
-
-  if (response.status !== 200) {
-    throw new Error("Failed to refresh tokens");
+  try {
+    const response = await api.post<RefreshTokenResponse>("/auth/refresh", data);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error));
   }
-
-  return response.data;
 };
 
 export const forgotPassword = async (email: string): Promise<{ message: string }> => {
-  const response = await api.post<{ message: string }>("/auth/forgot-password", { email });
-
-  if (response.status !== 200) {
-    throw new Error("Failed to send reset password email");
+  try {
+    const response = await api.post<{ message: string }>("/auth/forgot-password", { email });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error));
   }
-
-  return response.data;
 };
 
 export const logout = async (): Promise<{ message: string }> => {
-  const response = await api.post<{ message: string }>("/auth/logout");
-
-  if (response.status !== 200) {
-    throw new Error("Failed to logout");
+  try {
+    const response = await api.post<{ message: string }>("/auth/logout");
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    return response.data;
+  } catch (error: any) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    throw new Error(extractErrorMessage(error));
   }
-
-  localStorage.removeItem('token');
-  localStorage.removeItem('refreshToken');
-
-  return response.data;
 };

@@ -116,16 +116,23 @@ const Login = () => {
         const message = error.message.toLowerCase();
         const emailInvalid = message.includes('email');
         const passwordInvalid = message.includes('password');
-        if (emailInvalid && passwordInvalid) {
+        if (emailInvalid || passwordInvalid) {
           setError('email', {
             type: 'server',
-            message: 'Invalid email or password',
+            message: error.message,
           });
           setError('password', {
             type: 'server',
-            message: 'Invalid email or password',
+            message: error.message,
           });
+        } else {
+          setError('root', { type: 'server', message: error.message });
         }
+      } else {
+        setError('root', {
+          type: 'server',
+          message: 'An unexpected error occurred. Please try again.',
+        });
       }
     }
   };
@@ -214,6 +221,13 @@ const Login = () => {
                   <div className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
                     <span className="text-lg">✓</span>
                     <span>{successMessage}</span>
+                  </div>
+                )}
+
+                {errors.root?.message && (
+                  <div className="mt-4 flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                    <span>{errors.root.message}</span>
                   </div>
                 )}
 
