@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getAllPosts, type Post } from '../../api/posts';
 import FeedComposer from './FeedComposer';
 import FeedItem from './FeedItem';
-import { useAuth } from '../../contexts/AuthContext';
 
 const formatRelativeTime = (value?: string) => {
   if (!value) return 'Just now';
@@ -26,7 +25,6 @@ const formatRelativeTime = (value?: string) => {
 };
 
 export default function Feed() {
-  const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
