@@ -558,7 +558,7 @@ export const Profile = () => {
                           <FeedItem
                             key={post.id}
                             postId={post.id}
-                            userId={user?.id}
+                            userId={post.user?.id ?? post.author?.id}
                             user={userName}
                             avatar={avatar}
                             content={post.content}

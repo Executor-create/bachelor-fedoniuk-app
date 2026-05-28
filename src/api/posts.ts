@@ -28,6 +28,7 @@ export type Post = {
     };
   };
   author?: {
+    id?: string;
     username?: string;
     avatar?: string;
   };
