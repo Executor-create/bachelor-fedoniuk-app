@@ -61,6 +61,7 @@ const GameDetail = () => {
 
   const [showAddToCollectionModal, setShowAddToCollectionModal] =
     useState(false);
+  const [isAddedToCollection, setIsAddedToCollection] = useState(false);
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle');
 
   useEffect(() => {
@@ -305,11 +306,27 @@ const GameDetail = () => {
 
                   <div className="pt-4 flex items-center gap-3">
                     <button
-                      onClick={() => setShowAddToCollectionModal(true)}
-                      className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-500"
+                      onClick={() => {
+                        if (!isAddedToCollection)
+                          setShowAddToCollectionModal(true);
+                      }}
+                      disabled={isAddedToCollection}
+                      className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white transition ${
+                        isAddedToCollection
+                          ? 'bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 cursor-default'
+                          : 'bg-violet-600 hover:bg-violet-500'
+                      }`}
                     >
-                      <IoAdd size={20} />
-                      <span>Add to Collection</span>
+                      {isAddedToCollection ? (
+                        <IoCheckmark size={20} />
+                      ) : (
+                        <IoAdd size={20} />
+                      )}
+                      <span>
+                        {isAddedToCollection
+                          ? 'Added to Collection'
+                          : 'Add to Collection'}
+                      </span>
                     </button>
                     <button
                       type="button"
@@ -497,7 +514,7 @@ const GameDetail = () => {
           gameName={game.name}
           onClose={() => setShowAddToCollectionModal(false)}
           onGameAdded={() => {
-            console.log('Game added to collection');
+            setIsAddedToCollection(true);
           }}
         />
       )}
