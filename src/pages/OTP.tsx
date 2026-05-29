@@ -130,7 +130,7 @@ export default function OTPPage() {
     }
   }, [otp]);
 
-  const canResend = timeLeft <= 240;
+  const canResend = timeLeft === 0;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden">
@@ -293,7 +293,7 @@ export default function OTPPage() {
                       <span className="text-zinc-500">
                         Resend in{' '}
                         <span className="font-mono">
-                          {formatTime(300 - timeLeft)}
+                          {formatTime(timeLeft)}
                         </span>
                       </span>
                     ) : (
@@ -311,7 +311,7 @@ export default function OTPPage() {
                   removeItemFromLocalStorage('userId');
                   navigate('/login');
                 }}
-                className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition"
+                className="inline-flex relative z-10 items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition"
               >
                 <MdArrowBack size={15} />
                 Back to Login

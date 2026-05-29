@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import {
   FiAlertCircle,
   FiBookmark,
-  FiClock,
   FiGrid,
   FiLock,
   FiPlus,
   FiUsers,
-  FiZap,
 } from 'react-icons/fi';
 import {
   getAllCollections,
@@ -68,19 +66,7 @@ const buildCollectionCard = (collection: ApiCollection): CollectionCard => {
             COLLECTION_COLOR_PREVIEW_MAP.Purple[tileIndex],
           imageUrl: game.background_image,
         }))
-      : (
-          COLLECTION_COLOR_PREVIEW_MAP[colorKey] ??
-          COLLECTION_COLOR_PREVIEW_MAP.Purple
-        ).map((tint, tileIndex) => ({
-          label: [
-            iconKey,
-            colorKey,
-            collection.visibility,
-            collection.description ? 'Notes' : 'Empty',
-          ][tileIndex],
-          tint,
-          icon: [FiZap, FiGrid, FiClock, FiBookmark][tileIndex],
-        }));
+      : [];
 
   return {
     id: collection.id,
@@ -89,9 +75,13 @@ const buildCollectionCard = (collection: ApiCollection): CollectionCard => {
       collection.description?.trim() || 'No description provided yet.',
     accent,
     icon,
-    visibility: collection.visibility === 'Private' ? 'Private' : 'Public',
+    visibility:
+      collection.visibility?.toLowerCase() === 'private' ? 'Private' : 'Public',
     stats: {
-      visibility: collection.visibility === 'Private' ? 'Private' : 'Public',
+      visibility:
+        collection.visibility?.toLowerCase() === 'private'
+          ? 'Private'
+          : 'Public',
       theme: colorKey,
     },
     tiles,
@@ -174,15 +164,24 @@ function CollectionCardView({ collection }: { collection: CollectionCard }) {
         </p>
       </div>
 
-      <div className="relative z-0 mt-6 grid grid-cols-4 gap-2">
-        {collection.tiles.map((tile) => (
-          <div
-            key={tile.label}
-            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-[1.02]"
-          >
-            <CollectionPreviewTile {...tile} />
+      <div className="relative z-0 mt-6">
+        {collection.tiles.length > 0 ? (
+          <div className="grid grid-cols-4 gap-2">
+            {collection.tiles.map((tile) => (
+              <div
+                key={tile.label}
+                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-[1.02]"
+              >
+                <CollectionPreviewTile {...tile} />
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <div className="flex h-26 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] text-center">
+            <FiGrid size={20} className="text-zinc-600" />
+            <p className="text-xs text-zinc-600">No games added yet</p>
+          </div>
+        )}
       </div>
 
       <div className="relative z-0 mt-6 flex items-center justify-between gap-3 text-sm text-zinc-300 transition-transform duration-300 group-hover:translate-y-0.5">

@@ -9,6 +9,7 @@ import {
   IoHeart,
   IoHeartOutline,
   IoShareSocialOutline,
+  IoCheckmark,
 } from 'react-icons/io5';
 import { MdZoomIn } from 'react-icons/md';
 import Header from '../components/Header';
@@ -60,6 +61,7 @@ const GameDetail = () => {
 
   const [showAddToCollectionModal, setShowAddToCollectionModal] =
     useState(false);
+  const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle');
 
   useEffect(() => {
     if (!id) {
@@ -146,6 +148,28 @@ const GameDetail = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedImageIndex, game]);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = game?.name ?? 'Check out this game';
+    const text = `Check out ${title} on Klyro!`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch {
+        // user cancelled or share failed — do nothing
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareStatus('copied');
+        setTimeout(() => setShareStatus('idle'), 2000);
+      } catch {
+        // clipboard not available
+      }
+    }
+  };
 
   const handleFavoriteToggle = async () => {
     if (!game || favoritePending) return;
@@ -307,8 +331,21 @@ const GameDetail = () => {
                         <IoHeartOutline size={20} />
                       )}
                     </button>
-                    <button className="flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-zinc-200 transition hover:border-zinc-600 hover:text-white">
-                      <IoShareSocialOutline size={18} />
+                    <button
+                      type="button"
+                      onClick={handleShare}
+                      aria-label="Share game"
+                      className={`flex h-12 w-12 items-center justify-center rounded-2xl border transition ${
+                        shareStatus === 'copied'
+                          ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+                          : 'border-zinc-800 bg-zinc-900 text-zinc-200 hover:border-zinc-600 hover:text-white'
+                      }`}
+                    >
+                      {shareStatus === 'copied' ? (
+                        <IoCheckmark size={18} />
+                      ) : (
+                        <IoShareSocialOutline size={18} />
+                      )}
                     </button>
                   </div>
                 </div>
