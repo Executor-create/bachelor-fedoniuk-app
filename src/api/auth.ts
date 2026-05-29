@@ -80,6 +80,15 @@ export const verifyOtp = async ({ otp, userId }: VerifyOtpRequest): Promise<Veri
   }
 };
 
+export const resendOtp = async (userId: string): Promise<any> => {
+  try {
+    const response = await api.post("/auth/resend-otp", { userId });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error));
+  }
+};
+
 export interface ResetPasswordRequest {
   token: string;
   newPassword: string;
@@ -91,8 +100,7 @@ export interface ResetPasswordResponse {
 
 export const resetPassword = async ({ token, newPassword }: ResetPasswordRequest): Promise<ResetPasswordResponse> => {
   try {
-    const response = await api.post<ResetPasswordResponse>("/auth/reset-password", {
-      token,
+    const response = await api.post<ResetPasswordResponse>(`/auth/reset-password?token=${token}`, {
       newPassword,
     });
     return response.data;

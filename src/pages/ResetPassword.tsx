@@ -5,13 +5,12 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { resetPassword } from '../api/auth';
 import { LuGamepad2 } from 'react-icons/lu';
-import { MdOutlineLockOpen, MdArrowBack } from 'react-icons/md';
+import { MdArrowBack } from 'react-icons/md';
 import { IoLockClosedOutline } from 'react-icons/io5';
 import { FiShield, FiCheck, FiKey, FiLock } from 'react-icons/fi';
 import { PASSWORD_REGEX } from '../utils/regex';
 
 type ResetPasswordFormValues = {
-  token: string;
   newPassword: string;
   confirmPassword: string;
 };
@@ -38,7 +37,7 @@ const ResetPasswordPage = () => {
 
     try {
       const response = await resetPassword({
-        token: data.token || defaultToken,
+        token: defaultToken,
         newPassword: data.newPassword,
       });
 
@@ -139,27 +138,6 @@ const ResetPasswordPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="relative">
-                    <Input
-                      label="Reset Token"
-                      type="text"
-                      name="token"
-                      placeholder="Paste reset token here"
-                      register={register}
-                      errors={errors}
-                      options={{
-                        required: defaultToken
-                          ? false
-                          : 'Reset token is required',
-                      }}
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-2.5 pl-11 text-sm text-white placeholder:text-zinc-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/20 transition"
-                    />
-                    <MdOutlineLockOpen
-                      size={18}
-                      className="absolute left-3 top-[2.65rem] text-zinc-500 pointer-events-none"
-                    />
-                  </div>
-
                   <div className="relative">
                     <Input
                       label="New Password"

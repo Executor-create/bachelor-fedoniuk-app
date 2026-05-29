@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { InputOTP } from '../components/ui/InputOTP';
 import { InputOTPSlot } from '../components/ui/InputOTPSlot';
 import { InputOTPGroup } from '../components/ui/InputOTPGroup';
-import { verifyOtp } from '../api/auth';
+import { resendOtp, verifyOtp } from '../api/auth';
 import {
   getItemFromLocalStorage,
   removeItemFromLocalStorage,
@@ -113,14 +113,21 @@ export default function OTPPage() {
     }
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
+    if (!userId) return;
+
     setIsResending(true);
     setError('');
-    setTimeout(() => {
+
+    try {
+      await resendOtp(userId);
       setTimeLeft(300);
-      setIsResending(false);
       setOtp('');
-    }, 1000);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to resend OTP. Please try again.');
+    } finally {
+      setIsResending(false);
+    }
   };
 
   useEffect(() => {
